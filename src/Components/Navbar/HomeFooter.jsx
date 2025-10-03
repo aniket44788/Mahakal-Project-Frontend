@@ -45,7 +45,7 @@ export default function HomeFooter() {
                 {/* Right Section - Contact Form */}
                 <div>
                     <h3 className="font-bold text-lg md:text-xl mb-4">Contact Us</h3>
-                    <p className="mb-3">📞 +91 7039858794</p>
+                    <p className="mb-3">📞 +91 8878769436</p>
                     <form className="space-y-3">
                         <input
                             type="text"
@@ -74,7 +74,7 @@ export default function HomeFooter() {
 
             {/* Bottom Section */}
             <div className="border-t border-orange-300 mt-12 pt-6 text-center text-sm md:text-base">
-                © Copyright 2025, All Rights Reserved by <span className="font-semibold">Ghar Mandir</span>
+                © Copyright 2025, All Rights Reserved by <span className="font-semibold">Mahakal Bhakti Bazzar</span>
             </div>
         </footer>
     );
