@@ -29,7 +29,7 @@ function Navbar() {
                             className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-cover"
                         />
                         <span className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl font-bold text-orange-600 whitespace-nowrap">
-                            Mahakal Bhakti Bazzar
+                            Mahakal Bhakti Bazaar
                         </span>
                     </div>
                     {/* Desktop Menu - Full options for all desktop sizes */}
@@ -93,7 +93,7 @@ function Navbar() {
                                         className="w-10 h-10 rounded-full object-cover"
                                     />
                                     <span className="text-lg font-bold text-orange-600">
-                                        Mahakal Bhakti Bazzar
+                                        Mahakal Bhakti Bazaar
                                     </span>
                                 </div>
                             </div>

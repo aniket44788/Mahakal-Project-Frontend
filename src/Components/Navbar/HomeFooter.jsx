@@ -74,7 +74,7 @@ export default function HomeFooter() {
 
             {/* Bottom Section */}
             <div className="border-t border-orange-300 mt-12 pt-6 text-center text-sm md:text-base">
-                © Copyright 2025, All Rights Reserved by <span className="font-semibold">Mahakal Bhakti Bazzar</span>
+                © Copyright 2025, All Rights Reserved by <span className="font-semibold">Mahakal Bhakti Bazaar</span>
             </div>
         </footer>
     );
