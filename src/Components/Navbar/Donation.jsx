@@ -2,36 +2,42 @@ import React from "react";
 
 function Donation() {
     return (
-        <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg text-center">
-            {/* Heading */}
-            <h1 className="text-4xl font-bold text-indigo-600 mb-4">Support Our Mission 🚀</h1>
+        <div className="min-h-screen flex items-center justify-center bg-white px-4 sm:px-6">
+            <div className="max-w-5xl w-full bg-white rounded-3xl shadow-2xl p-6 sm:p-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-            {/* About Donation */}
-            <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                We are building a <span className="font-semibold">Prashad Selling Platform</span>
-                with a vision to reach people across the world.
-                Your support will help us grow into a successful startup 🌱.
-                Every contribution takes us one step closer to making this dream real.
-            </p>
+                {/* Left Section - Info */}
+                <div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-indigo-600 mb-6 leading-snug">
+                        Support Our <br className="hidden sm:block" /> Mission 🚀
+                    </h1>
+                    <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6">
+                        We are building a <span className="font-semibold">Prashad Selling Platform</span>
+                        with a vision to connect with people across the world.
+                        Your support will help us grow into a successful startup 🌱.
+                        Every contribution takes us one step closer to making this dream real.
+                    </p>
+                    <p className="text-gray-600 italic text-sm sm:text-base">
+                        "A small step from you can create a big change for us." 🙏
+                    </p>
+                </div>
 
-            {/* QR Section */}
-            <div className="flex flex-col items-center mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Scan & Donate ❤️</h2>
-                <p className="text-gray-600 mb-4">You can directly donate by scanning the QR code below.</p>
+                {/* Right Section - QR */}
+                <div className="flex flex-col items-center">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3">Scan & Donate ❤️</h2>
+                    <p className="text-gray-600 mb-4 text-center text-sm sm:text-base">
+                        Support us by scanning the QR code below.
+                    </p>
+                    <img
+                        src="/qr.png"
+                        alt="Donation QR Code"
+                        className="w-48 h-48 sm:w-64 sm:h-64 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
+                    />
+                    <p className="mt-4 text-xs sm:text-sm text-gray-500">
+                        (Available for UPI / Wallets / Bank Apps)
+                    </p>
+                </div>
 
-                {/* Replace src with your QR image path */}
-                <img
-                    src="/images/donation-qr.png"
-                    alt="Donation QR Code"
-                    className="w-56 h-56 border-4 border-indigo-500 rounded-lg shadow-md"
-                />
             </div>
-
-            {/* Closing message */}
-            <p className="text-gray-700 text-sm mt-4">
-                Thank you for believing in us 🙏 <br />
-                Together, we can grow and make a big impact!
-            </p>
         </div>
     );
 }
