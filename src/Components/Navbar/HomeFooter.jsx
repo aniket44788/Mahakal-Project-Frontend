@@ -2,8 +2,8 @@ import { FaInstagram, FaWhatsapp, FaFacebook } from "react-icons/fa";
 
 export default function HomeFooter() {
     return (
-        <footer className="bg-orange-100 text-orange-900 py-16 px-6 shadow-inner">
-            <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-12">
+        <footer className="bg-orange-100 text-orange-900 py-4 px-6 shadow-inner">
+            <div className="max-w-7xl mx-auto grid md:grid-cols-3 ">
 
                 {/* Left Section - Brand + Social */}
                 <div>
@@ -44,7 +44,7 @@ export default function HomeFooter() {
 
                 {/* Right Section - Contact Form */}
                 <div>
-                    <h3 className="font-bold text-lg md:text-xl mb-4">Contact Us</h3>
+                    <h3 className="font-bold text-lg md:text-xl mb-2">Contact Us</h3>
                     <p className="mb-3">📞 +91 8878769436</p>
                     <form className="space-y-3">
                         <input

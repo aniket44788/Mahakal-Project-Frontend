@@ -47,9 +47,11 @@ function Navbar() {
                         <li className="flex items-center gap-1 lg:gap-2 hover:text-orange-500 transition cursor-pointer text-sm lg:text-sm xl:text-base">
                             <Landmark size={16} className="w-4 h-4 lg:w-4 lg:h-4 xl:w-5 xl:h-5" /> Temples
                         </li>
+                        <Link to="/donation">
                         <li className="flex items-center gap-1 lg:gap-2 hover:text-orange-500 transition cursor-pointer text-sm lg:text-sm xl:text-base">
-                            <Library size={16} className="w-4 h-4 lg:w-4 lg:h-4 xl:w-5 xl:h-5" /> Library
+                            <Library size={16} className="w-4 h-4 lg:w-4 lg:h-4 xl:w-5 xl:h-5" /> Donation
                         </li>
+                        </Link>
                         <li className="flex items-center gap-1 lg:gap-2 hover:text-orange-500 transition cursor-pointer text-sm lg:text-sm xl:text-base">
                             <Phone size={16} className="w-4 h-4 lg:w-4 lg:h-4 xl:w-5 xl:h-5" /> Contact
                         </li>
@@ -113,9 +115,11 @@ function Navbar() {
                                 <li className="flex items-center gap-3 hover:text-orange-500 transition cursor-pointer py-3 px-3 rounded-lg hover:bg-orange-100">
                                     <Landmark size={20} /> Temples
                                 </li>
-                                <li className="flex items-center gap-3 hover:text-orange-500 transition cursor-pointer py-3 px-3 rounded-lg hover:bg-orange-100">
-                                    <Library size={20} /> Library
-                                </li>
+                                 <Link to="/donation" onClick={toggleMenu}>
+                                    <li className="flex items-center gap-3 hover:text-orange-500 transition cursor-pointer py-3 px-3 rounded-lg hover:bg-orange-100">
+                                        <Gift size={20} /> Donation
+                                    </li>
+                                </Link>
                                 <li className="flex items-center gap-3 hover:text-orange-500 transition cursor-pointer py-3 px-3 rounded-lg hover:bg-orange-100">
                                     <ShoppingBag size={20} /> My Orders
                                 </li>

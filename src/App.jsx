@@ -5,6 +5,7 @@ import Products from './Components/Navbar/Products'
 import Navbar from './Components/Navbar/Navbar'
 import Home from './Components/Navbar/Home'
 import ProductDetails from './Components/Navbar/ProductDetail'
+import Donation from './Components/Navbar/Donation'
 function App() {
 
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />}>   </Route>
           <Route path='/products' element={<Products />}>   </Route>
+          <Route path='/donation' element={<Donation />}>   </Route>
           <Route path='/single/:id' element={<ProductDetails />}>   </Route>
         </Routes>
       </BrowserRouter>
