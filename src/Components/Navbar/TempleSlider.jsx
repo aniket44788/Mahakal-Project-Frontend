@@ -39,7 +39,7 @@ const TempleSlider = () => {
         {
             id: 3,
             title: "Ujjain Mangalnath Mandir",
-            temple: "Vitthal Temple, Pandharpur",
+            temple: "Ankpat Marg, Agar Road, Ujjain, MP 456010",
             date: "15th November, Kartik Purnima",
             benefits: [
                 { icon: "🙏", label: "Devotion", color: "bg-red-400" },

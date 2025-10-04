@@ -11,7 +11,7 @@ function Donation() {
                         Support Our <br className="hidden sm:block" /> Mission 🚀
                     </h1>
                     <p className="text-gray-700 text-base sm:text-lg leading-relaxed mb-6">
-                        We are building a <span className="font-semibold">Prashad Selling Platform</span>
+                        We are building a <span className="font-semibold">Prasad Selling Platform </span>
                         with a vision to connect with people across the world.
                         Your support will help us grow into a successful startup 🌱.
                         Every contribution takes us one step closer to making this dream real.
