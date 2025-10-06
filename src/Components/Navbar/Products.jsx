@@ -219,11 +219,21 @@ function Products() {
                 <p className="text-xs text-gray-400">
                   Occasion: {item.occasion}
                 </p>
+                <div className="w-full flex items-center justify-center gap-4 mt-4">
 
-                {/* Actions */}
-                <button className="mt-4 w-full flex items-center justify-center gap-2 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
-                  <ShoppingCart size={18} /> Add to Cart
-                </button>
+                  {/* Add to Cart Button */}
+                  <button className="w-20 h-10 flex items-center justify-center gap-2 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
+                    <ShoppingCart size={18} /> 
+
+                  </button>
+
+                  {/* Buy Now Button */}
+                  <button className="w-60 flex items-center justify-center gap-2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition font-medium">
+                    Buy Now
+                  </button>
+                </div>
+
+
               </div>
             </div>
           ))}
