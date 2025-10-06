@@ -419,10 +419,7 @@ function ProductDetails() {
                                             <span className="text-lg">Prashad can be collected directly from the temple or designated pickup points.</span>
                                         </li>
 
-                                        <li className="flex items-start gap-3">
-                                            <span className="text-orange-600 mt-1 text-xl">✓</span>
-                                            <span className="text-lg">No home delivery is available currently.</span>
-                                        </li>
+                                        
 
                                         <li className="flex items-start gap-3">
                                             <span className="text-orange-600 mt-1 text-xl">✓</span>
