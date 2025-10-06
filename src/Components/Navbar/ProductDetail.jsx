@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, RotateCcw, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet , Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight } from "lucide-react";
 import { API_URL, APP_NAME } from "../../config";
 
 function ProductDetails() {
@@ -319,7 +319,6 @@ function ProductDetails() {
                             </button>
                             <button className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-[1.02] shadow-xl">
                                 BUY NOW
-                                <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-semibold">COD Available</span>
                             </button>
                         </div>
 
@@ -334,8 +333,8 @@ function ProductDetails() {
                                 <span className="text-gray-600 font-medium">Fast Delivery</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <RotateCcw className="text-orange-600 mb-1" size={20} />
-                                <span className="text-gray-600 font-medium">Easy Return</span>
+                                <Wallet className="text-orange-600 mb-1" size={20} />
+                                <span className="text-gray-600 font-medium"> 100% Secure Payment</span>
                             </div>
                         </div>
                     </div>
