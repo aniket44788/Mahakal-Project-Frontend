@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet , Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight } from "lucide-react";
 import { API_URL, APP_NAME } from "../../config";
 
 function ProductDetails() {
@@ -405,28 +405,38 @@ function ProductDetails() {
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Return Policy</h3>
-                                <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border border-gray-200">
-                                    <ul className="space-y-4 text-gray-700">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-6">Return & Delivery Policy</h3>
+
+                                <div className="bg-gradient-to-br from-orange-50 to-amber-100 p-8 rounded-2xl border border-orange-200">
+                                    <ul className="space-y-4 text-gray-800">
                                         <li className="flex items-start gap-3">
-                                            <span className="text-green-600 mt-1 text-xl">✓</span>
-                                            <span className="text-lg">7-day return policy for damaged items</span>
+                                            <span className="text-orange-600 mt-1 text-xl">✓</span>
+                                            <span className="text-lg">Orders are accepted only through online payment (No Cash on Delivery).</span>
                                         </li>
+
                                         <li className="flex items-start gap-3">
-                                            <span className="text-green-600 mt-1 text-xl">✓</span>
-                                            <span className="text-lg">Full refund for quality issues</span>
+                                            <span className="text-orange-600 mt-1 text-xl">✓</span>
+                                            <span className="text-lg">Prashad can be collected directly from the temple or designated pickup points.</span>
                                         </li>
+
                                         <li className="flex items-start gap-3">
-                                            <span className="text-green-600 mt-1 text-xl">✓</span>
-                                            <span className="text-lg">Easy return process</span>
+                                            <span className="text-orange-600 mt-1 text-xl">✓</span>
+                                            <span className="text-lg">No home delivery is available currently.</span>
                                         </li>
+
                                         <li className="flex items-start gap-3">
-                                            <span className="text-orange-600 mt-1 text-xl">!</span>
-                                            <span className="text-lg">Perishable items not eligible for return</span>
+                                            <span className="text-orange-600 mt-1 text-xl">✓</span>
+                                            <span className="text-lg">Refunds are provided only if payment is deducted but order confirmation fails.</span>
+                                        </li>
+
+                                        <li className="flex items-start gap-3">
+                                            <span className="text-red-600 mt-1 text-xl">!</span>
+                                            <span className="text-lg">Due to the perishable and sacred nature of Prashad, returns or replacements are not accepted once collected.</span>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
