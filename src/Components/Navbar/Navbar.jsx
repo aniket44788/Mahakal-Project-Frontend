@@ -42,23 +42,23 @@ function Navbar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // const handleLoginSuccess = async ({ credential }) => {
-    //     try {
-    //         const res = await fetch(`${TOKEN_URL}/auth/google/token`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ idToken: credential }),
-    //             credentials: "include",
-    //         });
-    //         const data = await res.json();
-    //         if (data.success) {
-    //             setUser(data.user);
-    //             localStorage.setItem("mahakalUser", JSON.stringify(data.user));
-    //         }
-    //     } catch (err) {
-    //         console.error("Login error:", err);
-    //     }
-    // };
+    const handleLoginSuccess = async ({ credential }) => {
+        try {
+            const res = await fetch(`${TOKEN_URL}/auth/google/token`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idToken: credential }),
+                credentials: "include",
+            });
+            const data = await res.json();
+            if (data.success) {
+                setUser(data.user);
+                localStorage.setItem("mahakalUser", JSON.stringify(data.user));
+            }
+        } catch (err) {
+            console.error("Login error:", err);
+        }
+    };
 
     const handleLogout = () => {
         googleLogout();
@@ -105,15 +105,10 @@ function Navbar() {
                     {/* Actions */}
                     <div className="flex items-center space-x-4 relative">
                         {!user ? (
-                            <button
-                                onClick={() => {
-                                    window.location.href = `${TOKEN_URL}/user/google`;
-                                }}
-                                className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
-                            >
-                                Sign in with Google
-                            </button>
-
+                            <GoogleLogin
+                                onSuccess={handleLoginSuccess}
+                                onError={() => console.error("Google login failed")}
+                            />
                         ) : (
                             <button
                                 onClick={toggleProfile}
