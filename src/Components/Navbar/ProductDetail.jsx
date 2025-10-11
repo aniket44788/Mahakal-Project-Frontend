@@ -433,7 +433,6 @@ function ProductDetails() {
                                     </ul>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
