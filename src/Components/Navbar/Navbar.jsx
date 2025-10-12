@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { TOKEN_URL } from "../../config.js";
-
+import { API_URL, TOKEN_URL } from "../../config.js";
 
 import {
     Home,
@@ -22,6 +21,7 @@ function Navbar() {
     const [showProfile, setShowProfile] = useState(false);
     const profileRef = useRef(null);
 
+    // Toggle functions
     const toggleMenu = () => setIsOpen(!isOpen);
     const toggleProfile = () => setShowProfile((prev) => !prev);
 
@@ -44,16 +44,18 @@ function Navbar() {
 
     const handleLoginSuccess = async ({ credential }) => {
         try {
-            const res = await fetch(`${TOKEN_URL}/auth/google/token`, {
+            const res = await fetch(`${API_URL}/user/google/token`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ idToken: credential }),
                 credentials: "include",
             });
             const data = await res.json();
+            console.log("Login response:", data);
             if (data.success) {
                 setUser(data.user);
                 localStorage.setItem("mahakalUser", JSON.stringify(data.user));
+                localStorage.setItem("mahakalToken", data.token);
             }
         } catch (err) {
             console.error("Login error:", err);
@@ -64,6 +66,7 @@ function Navbar() {
         googleLogout();
         setUser(null);
         localStorage.removeItem("mahakalUser");
+        localStorage.removeItem("mahakalToken");
         setShowProfile(false);
     };
 
@@ -130,7 +133,7 @@ function Navbar() {
                             >
                                 <div className="p-4 text-center">
                                     <img
-                                        src={user.picture || "/shivmahakal.png"}
+                                        src={user.profileImage || user.picture || "/shivmahakal.png"}
                                         alt="Profile"
                                         className="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                                     />
