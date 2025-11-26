@@ -1,17 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight } from "lucide-react";
-import { API_URL, APP_NAME } from "../../config";
+import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+
 
 function ProductDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedSize, setSelectedSize] = useState("2.5 Inch");
     const [quantity, setQuantity] = useState(1);
     const [isFavorite, setIsFavorite] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+    // this is address fetch from profile 
+    // --- near other useState declarations, e.g. after selectedProduct, quantity etc.
+    const [addresses, setAddresses] = useState([]);           // all user's addresses
+    const [selectedAddressId, setSelectedAddressId] = useState(null); // chosen address id
+    const [addressesLoading, setAddressesLoading] = useState(false);
+
+    // New states for buy flow
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [buyingProduct, setBuyingProduct] = useState(null);
+    const [buyingQuantity, setBuyingQuantity] = useState(1);
 
     // Mock reviews data - replace with actual API call
     const [reviews] = useState([
@@ -44,10 +56,34 @@ function ProductDetails() {
         }
     ]);
 
+    // helper to load addresses from profile
+    const fetchAddresses = async () => {
+        try {
+            setAddressesLoading(true);
+            const token = localStorage.getItem("mahakalToken");
+            if (!token) return setAddresses([]); // not logged in
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/user/profile`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const user = res.data.user || res.data; // adjust based on your API shape
+            const userAddresses = user?.addresses || [];
+            setAddresses(userAddresses);
+
+            // If there's a default address, auto-select it
+            const defaultAddr = userAddresses.find((a) => a.isDefault);
+            if (defaultAddr) setSelectedAddressId(defaultAddr._id);
+        } catch (err) {
+            console.error("Failed to fetch addresses:", err);
+            setAddresses([]);
+        } finally {
+            setAddressesLoading(false);
+        }
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const res = await axios.get(`${API_URL}/products/single/${id}`);
+                const res = await axios.get(`${import.meta.env.VITE_API_URL}/products/single/${id}`);
                 if (res.data.success) {
                     setProduct(res.data.product);
                 }
@@ -59,6 +95,11 @@ function ProductDetails() {
         };
         fetchProduct();
     }, [id]);
+
+    // call once on mount
+    useEffect(() => {
+        fetchAddresses();
+    }, []);
 
     const increaseQuantity = () => {
         setQuantity(prev => prev + 1);
@@ -94,6 +135,189 @@ function ProductDetails() {
             setSelectedImageIndex((prev) =>
                 prev === 0 ? product.images.length - 1 : prev - 1
             );
+        }
+    };
+
+    // New function to initiate buy flow (show address modal first)
+    const initiateBuy = (product, qty) => {
+        setBuyingProduct(product);
+        setBuyingQuantity(qty);
+        setShowAddressModal(true);
+    };
+
+    // New function to handle address confirmation and proceed to payment
+    const handleConfirmAddress = async () => {
+        if (!selectedAddressId) {
+            alert("Please select a delivery address before placing the order.");
+            return;
+        }
+        setShowAddressModal(false);
+        await handlePayment(buyingProduct, buyingQuantity, selectedAddressId);
+    };
+
+    // Load Razorpay Script
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            if (window.Razorpay) return resolve(true);
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    // Extracted payment logic (assumes address is selected)
+    const handlePayment = async (product, qty, addressId) => {
+        try {
+
+            if (!product) {
+                console.error("❌ No product passed to handleBuyNow");
+                return;
+            }
+
+            const token = localStorage.getItem("mahakalToken");
+            if (!token) {
+                alert("Please login to continue");
+                navigate("/login");
+                return;
+            }
+
+            // Load Razorpay
+            const scriptLoaded = await loadRazorpayScript();
+            if (!scriptLoaded) {
+                alert("Razorpay SDK failed to load.");
+                return;
+            }
+
+            // Fixed: Use correct generic fields (discountPrice / price) to avoid null/undefined
+            const finalPrice = product.discountPrice || product.price;
+            const finalAmount = finalPrice * qty;
+
+            // Added: Safeguard against invalid price
+            if (!finalPrice || finalPrice <= 0) {
+                alert("Invalid product price. Please try again.");
+                return;
+            }
+
+            if (finalAmount < 1) {
+                alert("Amount must be at least ₹1.");
+                return;
+            }
+
+            // Fixed: Use correct generic field (images)
+            const productImages = (product.images || []).map((img) => ({
+                url: img.url || img,
+                public_id: img.public_id || img._id
+            }));
+
+            // Create Order - Fixed: Use consistent API_URL; generic fields in payload
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
+                {
+                    products: [
+                        {
+                            product: product._id,
+                            // Fixed: Use correct generic field (name)
+                            name: product.name,
+                            category: product.category || "Prasad",
+                            images: productImages,
+                            quantity: qty,
+                            price: finalPrice,
+                            unit: product.unit || "gm"
+                        }
+                    ],
+                    amount: finalAmount,  // in rupees
+                    currency: "INR",
+                    addressId: addressId
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+
+            if (!res.data.success) {
+                throw new Error(res.data.message || "Order creation failed");
+            }
+
+            const order = res.data.order;
+
+            // Razorpay Options - Fixed: Use APP_NAME; generic description
+            const options = {
+                key: import.meta.env.VITE_APP_RAZORPAY,
+                amount: res.data.razorpayOrder.amount,      // ✔ Comes from backend (already *100)
+                currency: res.data.razorpayOrder.currency,  // ✔ "INR"
+                name: import.meta.env.VITE_APP_NAME || "Mahakal Store",
+                description: product.templePrasadTitle,     // ✔ correct field
+                order_id: res.data.razorpayOrder.id,        // ✔ Razorpay order id
+
+                handler: async (response) => {
+                    try {
+                        const verifyRes = await axios.post(
+                            `${import.meta.env.VITE_API_URL}/api/payment/verify-payment`,
+                            {
+                                razorpayOrderId: response.razorpay_order_id,
+                                razorpayPaymentId: response.razorpay_payment_id,
+                                signature: response.razorpay_signature
+                            },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
+
+                        if (verifyRes.data.success) {
+                            alert("Payment Successful!");
+                            navigate("/");
+                        } else {
+                            alert("Payment verification failed.");
+                        }
+                    } catch (verifyErr) {
+                        console.error("Verification error:", verifyErr);
+                        alert("Payment verification failed.");
+                    }
+                },
+                prefill: {
+                    name: "",
+                    email: "",
+                    contact: ""
+                },
+                theme: {
+                    color: "#f97316"
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error("BUY NOW ERROR:", err);
+            alert(err.response?.data?.message || err.message || "Payment failed");
+        }
+    };
+
+
+    const handleAddToCart = async () => {
+        try {
+            const token = localStorage.getItem("mahakalToken");
+            if (!token) {
+                alert("Please login to add items to cart");
+                navigate("/login");
+                return;
+            }
+
+            // Fixed: Use consistent API_URL
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/cart/add`,
+                { productId: id },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                alert("Item added to cart!");
+            } else {
+                alert(res.data.message || "Failed to add item");
+            }
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            alert("Something went wrong!");
         }
     };
 
@@ -197,7 +421,6 @@ function ProductDetails() {
                     {/* Right - Product Info */}
                     <div className="bg-white p-6 sm:p-8 lg:p-12 flex flex-col justify-center">
 
-
                         {/* Product Title */}
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
                             {product.name}
@@ -284,8 +507,6 @@ function ProductDetails() {
                             </div>
                         </div>
 
-
-
                         {/* Quantity */}
                         <div className="mb-8">
                             <p className="text-lg font-semibold text-gray-900 mb-3">Quantity</p>
@@ -313,11 +534,18 @@ function ProductDetails() {
 
                         {/* Action Buttons */}
                         <div className="space-y-4 mb-8">
-                            <button className="w-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 border-2 border-orange-200 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-orange-200 hover:to-amber-200 transition-all transform hover:scale-[1.02] shadow-lg">
+                            <button
+                                onClick={handleAddToCart}
+                                className="w-full bg-gradient-to-r from-orange-100 to-amber-100 text-orange-700 border-2 border-orange-200 py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-orange-200 hover:to-amber-200 transition-all transform hover:scale-[1.02] shadow-lg"
+                            >
                                 <ShoppingCart size={24} />
                                 ADD TO CART
                             </button>
-                            <button className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-[1.02] shadow-xl">
+
+                            <button
+                                onClick={() => initiateBuy(product, quantity)}
+                                className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-[1.02] shadow-xl"
+                            >
                                 BUY NOW
                             </button>
                         </div>
@@ -418,8 +646,6 @@ function ProductDetails() {
                                             <span className="text-orange-600 mt-1 text-xl">✓</span>
                                             <span className="text-lg">Prashad can be collected directly from the temple or designated pickup points.</span>
                                         </li>
-
-                                        
 
                                         <li className="flex items-start gap-3">
                                             <span className="text-orange-600 mt-1 text-xl">✓</span>
@@ -537,6 +763,87 @@ function ProductDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* New Address Selection Modal */}
+            {showAddressModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+                        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
+                            <h2 className="text-xl font-bold text-gray-800">Select Delivery Address</h2>
+                            <button
+                                onClick={() => setShowAddressModal(false)}
+                                className="text-gray-600 hover:text-gray-800 rounded-full p-2 transition"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="p-4">
+                            <h4 className="font-semibold text-gray-800 mb-3">
+                                Choose an address for "{buyingProduct?.name}"
+                            </h4>
+                            {addressesLoading ? (
+                                <div className="text-center py-4 text-sm text-gray-500">Loading addresses...</div>
+                            ) : addresses.length === 0 ? (
+                                <div className="text-center py-4">
+                                    <p className="text-gray-600 mb-4 text-sm">No addresses found. Please add one to proceed.</p>
+                                    <button
+                                        onClick={() => {
+                                            setShowAddressModal(false);
+                                            navigate("/profile");
+                                        }}
+                                        className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+                                    >
+                                        Add New Address
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
+                                        {addresses.map((addr) => (
+                                            <label
+                                                key={addr._id}
+                                                className={`flex items-start gap-3 p-3 rounded-lg border transition cursor-pointer ${selectedAddressId === addr._id
+                                                    ? "border-orange-400 bg-orange-50 shadow"
+                                                    : "border-gray-200 bg-white hover:border-gray-300"
+                                                    }`}
+                                            >
+                                                <input
+                                                    type="radio"
+                                                    name="selectedAddress"
+                                                    value={addr._id}
+                                                    checked={selectedAddressId === addr._id}
+                                                    onChange={() => setSelectedAddressId(addr._id)}
+                                                    className="mt-1 flex-shrink-0"
+                                                />
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="font-semibold text-sm">{addr.fullName} {addr.isDefault && <span className="text-green-600 font-medium">(Default)</span>}</div>
+                                                    <div className="text-gray-600 text-xs mt-1">
+                                                        {addr.houseNumber}, {addr.street}{addr.landmark ? `, ${addr.landmark}` : ""}
+                                                    </div>
+                                                    <div className="text-gray-600 text-xs">
+                                                        {addr.townCity}, {addr.state} - {addr.pincode}
+                                                    </div>
+                                                    <div className="text-gray-500 text-xs">Phone: {addr.phone}{addr.alternatePhone ? ` / ${addr.alternatePhone}` : ""}</div>
+                                                </div>
+                                            </label>
+                                        ))}
+                                    </div>
+                                    <button
+                                        onClick={handleConfirmAddress}
+                                        className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-lg transition"
+                                        disabled={!selectedAddressId}
+                                    >
+                                        Confirm Address & Proceed to Payment
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

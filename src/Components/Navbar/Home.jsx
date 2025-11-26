@@ -1,10 +1,13 @@
 import React from 'react'
 import WhyBookWithUs from "./WhyBookWithUs";
 import HowItWorks from "./HowItWorks";
-import HomeFooter from "./HomeFooter";
+// import HomeFooter from "./HomeFooter";
 import TempleSlider from './TempleSlider';
+import DashboardProducts from './DashboardProducts';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function Home() {
+    const Navigate = useNavigate()
     return (
         <>
             <>
@@ -28,14 +31,26 @@ function Home() {
                     </p>
                 </div>
                 <div>
+                    <DashboardProducts />
+                    <div className='w-full  flex items-center justify-center '>
+
+                        <button
+                            onClick={() => Navigate("/products")}
+                            className="  min-w-max bg-gradient-to-r from-red-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 sm:py-3 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg text-sm sm:text-base"
+                        >
+                            📋 View All Products .....
+                        </button>
+                    </div>
+
+                </div>
+
+                <div>
                     <WhyBookWithUs />
                 </div>
                 <div>
                     <HowItWorks />
                 </div>
-                <div>
-                    <HomeFooter />
-                </div>
+               
             </>
         </>
     )

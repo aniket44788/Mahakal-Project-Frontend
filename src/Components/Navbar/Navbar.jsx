@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin, googleLogout } from "@react-oauth/google";
-import { API_URL, TOKEN_URL } from "../../config.js";
+
 
 import {
     Home,
@@ -13,23 +13,66 @@ import {
     Menu,
     X,
     LogOut,
+    ShoppingCart,
 } from "lucide-react";
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [showProfile, setShowProfile] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
     const profileRef = useRef(null);
+    const navigate = useNavigate();
 
     // Toggle functions
     const toggleMenu = () => setIsOpen(!isOpen);
     const toggleProfile = () => setShowProfile((prev) => !prev);
+
+    // Navigate to profile page
+    const goToProfile = () => {
+        setShowProfile(false);
+        navigate("/profile");
+    };
+
+    // Navigate to cart
+    const goToCart = () => {
+        navigate("/cart");
+    };
 
     // Persist user login with localStorage
     useEffect(() => {
         const savedUser = localStorage.getItem("mahakalUser");
         if (savedUser) setUser(JSON.parse(savedUser));
     }, []);
+
+    // Fetch cart count
+    useEffect(() => {
+        const fetchCartCount = async () => {
+            const token = localStorage.getItem("mahakalToken");
+            if (!token) return;
+
+            try {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/cart/get`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+                const data = await res.json();
+                if (data.success) {
+                    setCartCount(data.cartCount || data.cart.length || 0);
+                }
+
+            } catch (err) {
+                console.error("Error fetching cart:", err);
+            }
+        };
+
+        if (user) {
+            fetchCartCount();
+        }
+    }, [user]);
 
     // Close profile dropdown if clicked outside
     useEffect(() => {
@@ -44,7 +87,7 @@ function Navbar() {
 
     const handleLoginSuccess = async ({ credential }) => {
         try {
-            const res = await fetch(`${API_URL}/user/google/token`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/user/google/token`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ idToken: credential }),
@@ -65,6 +108,7 @@ function Navbar() {
     const handleLogout = () => {
         googleLogout();
         setUser(null);
+        setCartCount(0);
         localStorage.removeItem("mahakalUser");
         localStorage.removeItem("mahakalToken");
         setShowProfile(false);
@@ -73,7 +117,7 @@ function Navbar() {
     return (
         <>
             <nav className="bg-white shadow-md fixed w-full top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 h-20 sm:px-6 py-3 flex items-center justify-between">
                     {/* Logo */}
                     <Link to="/" className="flex items-center space-x-2">
                         <img
@@ -100,18 +144,35 @@ function Navbar() {
                         <Link to="/donation" className="hover:text-orange-500 flex items-center gap-1">
                             <Library size={18} /> Donation
                         </Link>
-                        <Link to="/contact" className="hover:text-orange-500 flex items-center gap-1">
+                        {/* <Link to="/contact" className="hover:text-orange-500 flex items-center gap-1">
                             <Phone size={18} /> Contact
-                        </Link>
+                        </Link> */}
                     </ul>
 
-                    {/* Actions */}
-                    <div className="flex items-center space-x-4 relative">
+                    {/* Actions - Desktop */}
+                    <div className="hidden md:flex items-center space-x-4 relative">
+                        {/* Cart Icon */}
+                        <button
+                            onClick={goToCart}
+                            className="relative p-2 hover:bg-orange-50 rounded-full transition"
+                            aria-label="Shopping Cart"
+                        >
+                            <ShoppingCart className="text-orange-600 w-6 h-6" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </button>
+
                         {!user ? (
-                            <GoogleLogin
-                                onSuccess={handleLoginSuccess}
-                                onError={() => console.error("Google login failed")}
-                            />
+                            <div className="hidden md:block">
+                                <GoogleLogin
+                                    onSuccess={handleLoginSuccess}
+                                    onError={() => console.error("Google login failed")}
+                                    useOneTap={false}
+                                />
+                            </div>
                         ) : (
                             <button
                                 onClick={toggleProfile}
@@ -119,7 +180,7 @@ function Navbar() {
                                 aria-label="User Profile"
                             >
                                 <UserIcon className="text-orange-600 w-6 h-6" />
-                                <span className="hidden sm:inline font-medium text-gray-700">
+                                <span className="font-medium text-gray-700">
                                     {user.name}
                                 </span>
                             </button>
@@ -139,6 +200,13 @@ function Navbar() {
                                     />
                                     <h3 className="font-semibold text-gray-800">{user.name}</h3>
                                     <p className="text-sm text-gray-600 truncate">{user.email}</p>
+
+                                    <button
+                                        onClick={goToProfile}
+                                        className="mt-2 w-full py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded-md"
+                                    >
+                                        View Profile
+                                    </button>
                                 </div>
                                 <hr />
                                 <button
@@ -149,9 +217,12 @@ function Navbar() {
                                 </button>
                             </div>
                         )}
+                    </div>
 
+                    {/* Mobile Actions */}
+                    <div className="flex md:hidden items-center space-x-3">
                         {/* Mobile Menu Button */}
-                        <button className="md:hidden text-orange-600 p-2" onClick={toggleMenu}>
+                        <button className="text-orange-600 p-2" onClick={toggleMenu}>
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
@@ -173,33 +244,71 @@ function Navbar() {
                             <Link to="/donation" onClick={toggleMenu} className="px-4 py-2 hover:bg-orange-50 flex items-center gap-2">
                                 <Library size={20} /> Donation
                             </Link>
-                            <Link to="/contact" onClick={toggleMenu} className="px-4 py-2 hover:bg-orange-50 flex items-center gap-2">
+                            {/* <Link to="/contact" onClick={toggleMenu} className="px-4 py-2 hover:bg-orange-50 flex items-center gap-2">
                                 <Phone size={20} /> Contact
-                            </Link>
+                            </Link> */}
 
-                            {/* Mobile Sign Out / Profile */}
-                            {user && (
-                                <>
-                                    <hr className="my-2" />
-                                    <div className="px-4">
-                                        <p className="font-semibold mb-1">{user.name}</p>
-                                        <p className="text-xs mb-2 truncate">{user.email}</p>
-                                        <button
-                                            onClick={() => {
-                                                handleLogout();
-                                                toggleMenu();
-                                            }}
-                                            className="w-full flex items-center justify-center gap-2 py-2 bg-red-100 hover:bg-red-200 text-red-600 font-medium rounded"
-                                        >
-                                            <LogOut size={18} /> Logout
-                                        </button>
+                            <hr className="my-2" />
+
+                            {/* Cart Button in Mobile Sidebar */}
+                            <button
+                                onClick={() => {
+                                    goToCart();
+                                    toggleMenu();
+                                }}
+                                className="mx-4 px-4 py-2 bg-orange-50 hover:bg-orange-100 rounded-md flex items-center justify-between gap-2"
+                            >
+                                <span className="flex items-center gap-2 text-orange-700 font-medium">
+                                    <ShoppingCart size={20} /> My Cart
+                                </span>
+                                {cartCount > 0 && (
+                                    <span className="bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </button>
+
+                            <hr className="my-2" />
+
+                            {/* Mobile Sign In / Profile Section */}
+                            {!user ? (
+                                <div className="px-4 py-2">
+                                    <div className="bg-orange-50 p-3 rounded-md">
+                                        <GoogleLogin
+                                            onSuccess={handleLoginSuccess}
+                                            onError={() => console.error("Google login failed")}
+                                            text="signin_with"
+                                            width="100%"
+                                        />
                                     </div>
-                                </>
+                                </div>
+                            ) : (
+                                <div className="px-4">
+                                    <p className="font-semibold mb-1">{user.name}</p>
+                                    <p className="text-xs mb-2 truncate">{user.email}</p>
+                                    <button
+                                        onClick={() => {
+                                            goToProfile();
+                                            toggleMenu();
+                                        }}
+                                        className="w-full flex items-center justify-center gap-2 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded"
+                                    >
+                                        <UserIcon size={18} /> View Profile
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            handleLogout();
+                                            toggleMenu();
+                                        }}
+                                        className="w-full flex items-center justify-center gap-2 py-2 bg-red-100 hover:bg-red-200 text-red-600 font-medium rounded mt-1"
+                                    >
+                                        <LogOut size={18} /> Logout
+                                    </button>
+                                </div>
                             )}
                         </ul>
                     </div>
                 )}
-
             </nav>
             {/* Spacer below fixed navbar */}
             <div className="h-20"></div>

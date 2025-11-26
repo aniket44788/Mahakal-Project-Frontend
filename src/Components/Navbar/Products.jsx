@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, ShoppingCart, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { API_URL, APP_NAME } from "../../config";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -39,7 +38,7 @@ function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${API_URL}/products/all`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/products/all`);
         if (res.data.success) {
           setProducts(res.data.products);
           setFilteredProducts(res.data.products);
@@ -223,7 +222,7 @@ function Products() {
 
                   {/* Add to Cart Button */}
                   <button className="w-20 h-10 flex items-center justify-center gap-2 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
-                    <ShoppingCart size={18} /> 
+                    <ShoppingCart size={18} />
 
                   </button>
 
