@@ -75,13 +75,23 @@ function DashboardProducts() {
         return () => clearInterval(interval);
     }, [autoSlide, products.length, products]);
 
+
     const fetchProducts = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/dashboard/product/get`);
-            const data = await response.json();
-            if (data.success) setProducts(data.data);
-            else setError(data.message);
+
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/dashboard/product/get`
+            );
+
+            console.log(response.data, "Here is main data");
+
+            if (response.data.success) {
+                setProducts(response.data.data); // Set actual products array
+            } else {
+                setError(response.data.message);
+            }
+
         } catch (err) {
             console.error(err);
             setError("Failed to fetch temple products");
@@ -90,20 +100,27 @@ function DashboardProducts() {
         }
     };
 
+
     const fetchProductById = async (id) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/dashboard/product/get/${id}`);
-            const data = await response.json();
-            if (data.success) {
-                setSelectedProduct(data.data);
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/dashboard/product/get/${id}`
+            );
+
+            console.log("here is data", response.data);
+
+            if (response.data.success) {
+                setSelectedProduct(response.data.data);   // Assign correct product object
                 setModalImageIndex(0);
                 setQuantity(1);
                 setAutoSlide(false);
             }
+
         } catch (err) {
             console.error("Error fetching product details:", err);
         }
     };
+
 
     const calculateDiscount = (price, discountPrice) =>
         Math.round(((price - discountPrice) / price) * 100);
