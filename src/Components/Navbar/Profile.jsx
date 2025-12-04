@@ -5,7 +5,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
 import { User, Mail, ShieldCheck, Heart, Package, Settings, LogOut, Edit2, Star, Eye, Clock, CheckCircle, XCircle, AlertTriangle, Truck, ChevronRight } from "lucide-react";
 import HomeFooter from "./HomeFooter";
-import PrivacyPolicy from "./PrivacyPolicy";
+
 
 function Profile() {
     const [user, setUser] = useState(null);
@@ -518,7 +518,6 @@ function Profile() {
                                 </div>
                             </div>
                         )}
-                        <PrivacyPolicy />
                     </div>
                 </div>
             </div>

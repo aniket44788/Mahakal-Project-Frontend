@@ -74,7 +74,11 @@ export default function HomeFooter() {
                 <div>
                     <h3 className="font-bold text-lg md:text-xl mb-4">Quick Links</h3>
                     <ul className="space-y-3">
-                        <li><a href="/profile" className="hover:text-orange-600 hover:underline transition">Privacy Policy</a></li>
+                        <li><a href="/privacypolicy" className="hover:text-orange-600 hover:underline transition">Privacy Policy</a></li>
+                        <li><a href="/termscondition" className="hover:text-orange-600 hover:underline transition">Terms and Conditions</a></li>
+                        <li><a href="/RefundReturnPolicy" className="hover:text-orange-600 hover:underline transition">RefundReturnPolicy</a></li>
+                        <li><a href="/ShippingPolicy" className="hover:text-orange-600 hover:underline transition">ShippingPolicy</a></li>
+                        <li><a href="/ContactUs" className="hover:text-orange-600 hover:underline transition">Contact us</a></li>
                     </ul>
                 </div>
 

@@ -13,8 +13,12 @@ import Temples from './Components/Navbar/Temples'
 import AddAddress from './Components/Navbar/AddAddress'
 import UpdateAddress from './Components/Navbar/UpdateAddress'
 import OrderDetails from './Components/Navbar/OrderDetails'
-import PrivacyPolicy from './Components/Navbar/PrivacyPolicy'
 import HomeFooter from './Components/Navbar/HomeFooter'
+import TermsCondition from './Components/Policy/TermsCondition'
+import RefundReturnPolicy from './Components/Policy/RefundReturnPolicy'
+import ShippingPolicy from './Components/Policy/ShippingPolicy'
+import ContactUs from './Components/Policy/ContactUs'
+import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
 // import DashboardProducts from './Components/Navbar/DashboardProducts'
 function App() {
 
@@ -35,6 +39,13 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/cart" element={<Cart />} />
           {/* <Route path="/dashboardproducts" element={<DashboardProducts />} /> */}
+
+          <Route path="/termscondition" element={<TermsCondition />} />
+          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="/RefundReturnPolicy" element={<RefundReturnPolicy />} />
+          <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
+          <Route path="/ContactUs" element={<ContactUs />} />
+
 
 
 
