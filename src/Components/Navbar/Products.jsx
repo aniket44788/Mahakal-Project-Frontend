@@ -136,49 +136,59 @@ function Products() {
 
       </div>
 
+
+
+
       {filteredProducts.length === 0 ? (
         <p className="text-center text-gray-600">No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
           {filteredProducts.map((item) => (
             <div
               onClick={() => navigate(`/single/${item._id}`)}
               key={item._id}
-              className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-transform duration-300 relative cursor-pointer"
+              className="bg-white shadow-lg rounded-2xl overflow-hidden hover:shadow-2xl hover:scale-105 transition-all duration-300 relative cursor-pointer flex flex-col"
             >
               {/* Discount Badge */}
               {item.discountPrice && (
-                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                <span className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
                   {Math.round(
                     ((item.price - item.discountPrice) / item.price) * 100
-                  )}
-                  % OFF
+                  )}% OFF
                 </span>
               )}
 
               {/* Product Image */}
-              <div className="flex justify-center items-center p-4">
+              <div className="flex justify-center items-center p-4 bg-gray-50">
                 <img
                   src={item.images[0]?.url}
                   alt={item.name}
-                  className="w-60 h-52 object-cover rounded-lg"
+                  className="w-full h-64 object-cover rounded-lg"
                 />
               </div>
 
               {/* Product Info */}
-              <div className="p-4">
+              <div className="p-4 flex flex-col flex-grow">
                 <h2 className="text-lg font-bold text-gray-800 truncate">
                   {item.name}
                 </h2>
-                <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                <p className="text-sm text-gray-600 mt-1 line-clamp-2 flex-grow">
                   {item.description}
                 </p>
 
+                {/* Extra Details */}
+                <p className="text-xs text-gray-500 mt-2">
+                  {item.size} • {item.material} • {item.deity}
+                </p>
+                <p className="text-xs text-gray-400">
+                  Occasion: {item.occasion}
+                </p>
+
                 {/* Price Section */}
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-2 mt-3">
                   {item.isAvailable ? (
                     <>
-                      <span className="text-orange-600 font-bold text-lg">
+                      <span className="text-orange-600 font-bold text-xl">
                         ₹{item.discountPrice || item.price}
                       </span>
                       {item.discountPrice && item.discountPrice < item.price && (
@@ -188,12 +198,11 @@ function Products() {
                       )}
                     </>
                   ) : (
-                    <span className="text-red-600 font-bold text-lg">
+                    <span className="text-red-600 font-bold text-xl">
                       SOLD OUT
                     </span>
                   )}
                 </div>
-
 
                 {/* Rating */}
                 <div className="flex items-center mt-2 text-yellow-500">
@@ -201,9 +210,7 @@ function Products() {
                     <Star
                       key={i}
                       size={16}
-                      className={
-                        i < item.rating?.average ? "fill-yellow-500" : ""
-                      }
+                      className={i < Math.floor(item.rating?.average || 0) ? "fill-yellow-500" : ""}
                     />
                   ))}
                   <span className="ml-2 text-xs text-gray-500">
@@ -211,33 +218,27 @@ function Products() {
                   </span>
                 </div>
 
-                {/* ✅ Extra Details */}
-                <p className="text-xs text-gray-500 mt-2">
-                  {item.size} • {item.material} • {item.deity}
-                </p>
-                <p className="text-xs text-gray-400">
-                  Occasion: {item.occasion}
-                </p>
-                <div className="w-full flex items-center justify-center gap-4 mt-4">
-
+                {/* Buttons */}
+                <div className="w-full flex items-center justify-center gap-3 mt-6">
                   {/* Add to Cart Button */}
-                  <button className="w-20 h-10 flex items-center justify-center gap-2 bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition">
+                  <button className="flex-1 min-w-0 h-11 flex items-center justify-center gap-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition font-medium">
                     <ShoppingCart size={18} />
-
+                    Add to Cart
                   </button>
 
                   {/* Buy Now Button */}
-                  <button className="w-60 flex items-center justify-center gap-2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition font-medium">
+                  <button className="flex-1 min-w-0 h-11 flex items-center justify-center bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition font-medium">
                     Buy Now
                   </button>
                 </div>
-
-
               </div>
             </div>
           ))}
         </div>
       )}
+
+
+
     </div>
   );
 }

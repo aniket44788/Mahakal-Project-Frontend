@@ -19,13 +19,15 @@ import RefundReturnPolicy from './Components/Policy/RefundReturnPolicy'
 import ShippingPolicy from './Components/Policy/ShippingPolicy'
 import ContactUs from './Components/Policy/ContactUs'
 import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
-// import DashboardProducts from './Components/Navbar/DashboardProducts'
+// import Categories from './Category'
+import DashboardProducts from './Components/Navbar/DashboardProducts'
 function App() {
 
   return (
     <>
       <BrowserRouter>
         <Navbar />
+        {/* <Categories /> */}
         <Routes>
           <Route path='/' element={<Home />}>   </Route>
           <Route path='/products' element={<Products />}>   </Route>
@@ -45,10 +47,7 @@ function App() {
           <Route path="/RefundReturnPolicy" element={<RefundReturnPolicy />} />
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/ContactUs" element={<ContactUs />} />
-
-
-
-
+          
         </Routes>
         <HomeFooter />
 

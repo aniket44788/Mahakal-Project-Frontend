@@ -144,10 +144,10 @@ function DashboardProducts() {
         return (selectedProduct.templePrasadDiscountPrice * quantity).toFixed(2);
     };
 
-    const calculateTax = () => {
-        if (!selectedProduct) return "0.00";
-        return (calculateTotalPrice() * 0.164).toFixed(2);
-    };
+    // const calculateTax = () => {
+    //     if (!selectedProduct) return "0.00";
+    //     return (calculateTotalPrice() * 0.164).toFixed(2);
+    // };
 
     const closeModal = () => {
         setSelectedProduct(null);
@@ -683,18 +683,13 @@ function DashboardProducts() {
                                         </div>
                                         <div className="text-right">
                                             <p className="text-sm text-gray-600 mb-1">Total Price: <span className="text-2xl font-bold text-orange-600">₹{calculateTotalPrice()}</span></p>
-                                            <p className="text-xs text-gray-500">(Tax: ₹{calculateTax()})</p>
+                                            {/* <p className="text-xs text-gray-500">(Tax: ₹{calculateTax()})</p> */}
                                         </div>
                                     </div>
 
                                     {/* Action Buttons */}
                                     <div className="flex gap-3">
-                                        <button
-                                            onClick={() => { closeModal(); initiateBuy(selectedProduct, quantity); }}
-                                            className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition shadow-md"
-                                        >
-                                            Order Now
-                                        </button>
+                                       
                                         <button
                                             onClick={() => { closeModal(); initiateBuy(selectedProduct, quantity); }}
                                             className="flex-1 bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded-lg transition shadow-md"

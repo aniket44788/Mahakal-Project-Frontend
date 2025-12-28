@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
-
-
 import {
     Home,
     Gift,
@@ -14,6 +11,8 @@ import {
     X,
     LogOut,
     ShoppingCart,
+    Mail,
+    Lock,
 } from "lucide-react";
 
 function Navbar() {
@@ -21,38 +20,49 @@ function Navbar() {
     const [user, setUser] = useState(null);
     const [showProfile, setShowProfile] = useState(false);
     const [cartCount, setCartCount] = useState(0);
+    const [showAuthModal, setShowAuthModal] = useState(false);
+    const [authStep, setAuthStep] = useState("email"); // "email" or "otp"
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState("");
+    const [error, setError] = useState("");
+
     const profileRef = useRef(null);
     const navigate = useNavigate();
+
+    const API_URL = import.meta.env.VITE_API_URL;
 
     // Toggle functions
     const toggleMenu = () => setIsOpen(!isOpen);
     const toggleProfile = () => setShowProfile((prev) => !prev);
 
-    // Navigate to profile page
     const goToProfile = () => {
         setShowProfile(false);
         navigate("/profile");
     };
 
-    // Navigate to cart
     const goToCart = () => {
         navigate("/cart");
     };
 
-    // Persist user login with localStorage
+    // Load user from localStorage on mount
     useEffect(() => {
         const savedUser = localStorage.getItem("mahakalUser");
-        if (savedUser) setUser(JSON.parse(savedUser));
+        const savedToken = localStorage.getItem("mahakalToken");
+        if (savedUser && savedToken) {
+            setUser(JSON.parse(savedUser));
+        }
     }, []);
 
-    // Fetch cart count
+    // Fetch cart count when user is logged in
     useEffect(() => {
         const fetchCartCount = async () => {
             const token = localStorage.getItem("mahakalToken");
-            if (!token) return;
+            if (!token || !user) return;
 
             try {
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/cart/get`, {
+                const res = await fetch(`${API_URL}/cart/get`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -61,57 +71,119 @@ function Navbar() {
                 });
                 const data = await res.json();
                 if (data.success) {
-                    setCartCount(data.cartCount || data.cart.length || 0);
+                    setCartCount(data.cartCount || data.cart?.length || 0);
                 }
-
             } catch (err) {
                 console.error("Error fetching cart:", err);
             }
         };
 
-        if (user) {
-            fetchCartCount();
-        }
-    }, [user]);
+        if (user) fetchCartCount();
+    }, [user, API_URL]);
 
-    // Close profile dropdown if clicked outside
+    // Close profile dropdown on outside click
     useEffect(() => {
-        function handleClickOutside(event) {
+        const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
                 setShowProfile(false);
             }
-        }
+        };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleLoginSuccess = async ({ credential }) => {
+    // Send OTP to email
+    const handleSendOtp = async (e) => {
+        e.preventDefault();
+        if (!email || !email.includes("@")) {
+            setError("Please enter a valid email");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+        setMessage("");
+
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/user/google/token`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/user/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ idToken: credential }),
-                credentials: "include",
+                body: JSON.stringify({ email }),
             });
+
             const data = await res.json();
-            console.log("Login response:", data);
+            if (data.success || res.ok) {
+                setMessage("OTP sent to your email!");
+                setAuthStep("otp");
+            } else {
+                setError(data.message || "Failed to send OTP");
+            }
+        } catch (err) {
+            setError("Network error. Please try again.");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Verify OTP
+    const handleVerifyOtp = async (e) => {
+        e.preventDefault();
+        if (!otp || otp.length !== 6) {
+            setError("Please enter the 6-digit OTP");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+        setMessage("");
+
+        try {
+            const res = await fetch(`${API_URL}/user/verifyOtp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp }),
+            });
+
+            const data = await res.json();
             if (data.success) {
                 setUser(data.user);
                 localStorage.setItem("mahakalUser", JSON.stringify(data.user));
                 localStorage.setItem("mahakalToken", data.token);
+                setShowAuthModal(false);
+                setAuthStep("email");
+                setEmail("");
+                setOtp("");
+                setMessage("Logged in successfully!");
+            } else {
+                setError(data.message || "Invalid OTP");
             }
         } catch (err) {
-            console.error("Login error:", err);
+            setError("Verification failed. Try again.");
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
+    // Logout
     const handleLogout = () => {
-        googleLogout();
         setUser(null);
         setCartCount(0);
         localStorage.removeItem("mahakalUser");
         localStorage.removeItem("mahakalToken");
         setShowProfile(false);
+        setShowAuthModal(false);
+    };
+
+    // Close modal
+    const closeModal = () => {
+        setShowAuthModal(false);
+        setAuthStep("email");
+        setEmail("");
+        setOtp("");
+        setError("");
+        setMessage("");
     };
 
     return (
@@ -144,18 +216,14 @@ function Navbar() {
                         <Link to="/donation" className="hover:text-orange-500 flex items-center gap-1">
                             <Library size={18} /> Donation
                         </Link>
-                        {/* <Link to="/contact" className="hover:text-orange-500 flex items-center gap-1">
-                            <Phone size={18} /> Contact
-                        </Link> */}
                     </ul>
 
-                    {/* Actions - Desktop */}
+                    {/* Desktop Actions */}
                     <div className="hidden md:flex items-center space-x-4 relative">
-                        {/* Cart Icon */}
+                        {/* Cart */}
                         <button
                             onClick={goToCart}
                             className="relative p-2 hover:bg-orange-50 rounded-full transition"
-                            aria-label="Shopping Cart"
                         >
                             <ShoppingCart className="text-orange-600 w-6 h-6" />
                             {cartCount > 0 && (
@@ -165,24 +233,21 @@ function Navbar() {
                             )}
                         </button>
 
+                        {/* Login / Profile */}
                         {!user ? (
-                            <div className="hidden md:block">
-                                <GoogleLogin
-                                    onSuccess={handleLoginSuccess}
-                                    onError={() => console.error("Google login failed")}
-                                    useOneTap={false}
-                                />
-                            </div>
+                            <button
+                                onClick={() => setShowAuthModal(true)}
+                                className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-md font-medium flex items-center gap-2"
+                            >
+                                <Mail size={18} /> Sign In
+                            </button>
                         ) : (
                             <button
                                 onClick={toggleProfile}
-                                className="relative bg-orange-100 hover:bg-orange-200 p-2 rounded-full transition flex items-center gap-2"
-                                aria-label="User Profile"
+                                className="bg-orange-100 hover:bg-orange-200 p-2 rounded-full transition flex items-center gap-2"
                             >
-                                <UserIcon className="text-orange-600 w-6 h-6" />
-                                <span className="font-medium text-gray-700">
-                                    {user.name}
-                                </span>
+                                <UserIcon className="text-orange-600 w-8 h-6" />
+                                <span className="font-medium text-gray-700">{user.name}</span>
                             </button>
                         )}
 
@@ -194,13 +259,12 @@ function Navbar() {
                             >
                                 <div className="p-4 text-center">
                                     <img
-                                        src={user.profileImage || user.picture || "/shivmahakal.png"}
+                                        src={user.profileImage || "/shivmahakal.png"}
                                         alt="Profile"
                                         className="w-16 h-16 rounded-full mx-auto mb-2 object-cover"
                                     />
                                     <h3 className="font-semibold text-gray-800">{user.name}</h3>
                                     <p className="text-sm text-gray-600 truncate">{user.email}</p>
-
                                     <button
                                         onClick={goToProfile}
                                         className="mt-2 w-full py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded-md"
@@ -219,16 +283,15 @@ function Navbar() {
                         )}
                     </div>
 
-                    {/* Mobile Actions */}
+                    {/* Mobile Menu Button */}
                     <div className="flex md:hidden items-center space-x-3">
-                        {/* Mobile Menu Button */}
                         <button className="text-orange-600 p-2" onClick={toggleMenu}>
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
 
-                {/* Mobile Dropdown */}
+                {/* Mobile Sidebar */}
                 {isOpen && (
                     <div className="md:hidden bg-white shadow-inner">
                         <ul className="flex flex-col py-4 space-y-2 text-gray-700 font-medium">
@@ -244,13 +307,9 @@ function Navbar() {
                             <Link to="/donation" onClick={toggleMenu} className="px-4 py-2 hover:bg-orange-50 flex items-center gap-2">
                                 <Library size={20} /> Donation
                             </Link>
-                            {/* <Link to="/contact" onClick={toggleMenu} className="px-4 py-2 hover:bg-orange-50 flex items-center gap-2">
-                                <Phone size={20} /> Contact
-                            </Link> */}
 
                             <hr className="my-2" />
 
-                            {/* Cart Button in Mobile Sidebar */}
                             <button
                                 onClick={() => {
                                     goToCart();
@@ -270,39 +329,37 @@ function Navbar() {
 
                             <hr className="my-2" />
 
-                            {/* Mobile Sign In / Profile Section */}
                             {!user ? (
-                                <div className="px-4 py-2">
-                                    <div className="bg-orange-50 p-3 rounded-md">
-                                        <GoogleLogin
-                                            onSuccess={handleLoginSuccess}
-                                            onError={() => console.error("Google login failed")}
-                                            text="signin_with"
-                                            width="100%"
-                                        />
-                                    </div>
-                                </div>
+                                <button
+                                    onClick={() => {
+                                        setShowAuthModal(true);
+                                        toggleMenu();
+                                    }}
+                                    className="mx-4 px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-md font-medium"
+                                >
+                                    Sign In with Email
+                                </button>
                             ) : (
-                                <div className="px-4">
+                                <div className="px-4 pb-4">
                                     <p className="font-semibold mb-1">{user.name}</p>
-                                    <p className="text-xs mb-2 truncate">{user.email}</p>
+                                    <p className="text-xs mb-3 truncate">{user.email}</p>
                                     <button
                                         onClick={() => {
                                             goToProfile();
                                             toggleMenu();
                                         }}
-                                        className="w-full flex items-center justify-center gap-2 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded"
+                                        className="w-full py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded mb-2"
                                     >
-                                        <UserIcon size={18} /> View Profile
+                                        View Profile
                                     </button>
                                     <button
                                         onClick={() => {
                                             handleLogout();
                                             toggleMenu();
                                         }}
-                                        className="w-full flex items-center justify-center gap-2 py-2 bg-red-100 hover:bg-red-200 text-red-600 font-medium rounded mt-1"
+                                        className="w-full py-2 bg-red-100 hover:bg-red-200 text-red-600 rounded"
                                     >
-                                        <LogOut size={18} /> Logout
+                                        Logout
                                     </button>
                                 </div>
                             )}
@@ -310,8 +367,100 @@ function Navbar() {
                     </div>
                 )}
             </nav>
-            {/* Spacer below fixed navbar */}
+
+            {/* Spacer */}
             <div className="h-20"></div>
+
+            {/* Auth Modal */}
+            {showAuthModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4
+                bg-black/20 backdrop-blur-md">
+
+
+                    <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-2xl font-bold text-orange-600">
+                                {authStep === "email" ? "Sign In" : "Verify OTP"}
+                            </h2>
+                            <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+                                <X size={24} />
+                            </button>
+                        </div>
+
+                        {authStep === "email" ? (
+                            <form onSubmit={handleSendOtp}>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Email Address
+                                    </label>
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                            placeholder="your@email.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+                                {message && <p className="text-green-600 text-sm mb-3">{message}</p>}
+
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 rounded-md disabled:opacity-70"
+                                >
+                                    {loading ? "Sending..." : "Send OTP"}
+                                </button>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleVerifyOtp}>
+                                <div className="mb-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Enter 6-digit OTP sent to {email}
+                                    </label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-3 text-gray-400" size={20} />
+                                        <input
+                                            type="text"
+                                            maxLength="6"
+                                            value={otp}
+                                            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-center text-lg tracking-wider"
+                                            placeholder="______"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
+                                {message && <p className="text-green-600 text-sm mb-3">{message}</p>}
+
+                                <div className="flex gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setAuthStep("email")}
+                                        className="flex-1 border border-gray-300 text-gray-700 py-3 rounded-md"
+                                    >
+                                        Back
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-medium py-3 rounded-md disabled:opacity-70"
+                                    >
+                                        {loading ? "Verifying..." : "Verify OTP"}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            )}
         </>
     );
 }
