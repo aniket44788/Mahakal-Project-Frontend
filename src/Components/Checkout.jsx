@@ -95,7 +95,6 @@ const Checkout = () => {
 
                         if (verifyRes.data.success) {
                             setPaymentStatus("success");
-                            alert(`✅ Payment Successful!`);
                             navigate("/success"); // or wherever you want
                         } else {
                             setPaymentStatus("error");

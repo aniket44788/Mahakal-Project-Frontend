@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"
+import { toastError, toastInfo, toastSuccess, toastWarning } from "../Toast";
 
 function DashboardProducts() {
     const navigate = useNavigate();
@@ -188,7 +189,7 @@ function DashboardProducts() {
     // New function to handle address confirmation and proceed to payment
     const handleConfirmAddress = async () => {
         if (!selectedAddressId) {
-            alert("Please select a delivery address before placing the order.");
+            toastInfo("Please select a delivery address before placing the order.");
             return;
         }
         setShowAddressModal(false);
@@ -216,7 +217,7 @@ function DashboardProducts() {
             }
             const scriptLoaded = await loadRazorpayScript();
             if (!scriptLoaded) {
-                alert("Razorpay SDK failed to load.");
+                toastError("Razorpay SDK failed to load.");
                 return;
             }
 
@@ -226,7 +227,7 @@ function DashboardProducts() {
 
             // Minimum order check
             if (finalAmount < 1) {
-                alert("Amount must be at least ₹1.");
+                toastWarning("Amount must be at least ₹1.");
                 return;
             }
 
@@ -287,14 +288,14 @@ function DashboardProducts() {
                         );
 
                         if (verifyRes.data.success) {
-                            window.alert("🎉 Order Placed Successfully!\n\nThank you for your purchase. Your prasad will be delivered soon.");
+                            toastSuccess("🎉 Order Placed Successfully!\n\nThank you for your purchase. Your prasad will be delivered soon.");
 
                         } else {
-                            alert("Payment verification failed. Please contact support.");
+                            toastWarning("Payment verification failed. Please contact support.");
                         }
                     } catch (verifyErr) {
                         console.error("Payment verification error:", verifyErr);
-                        alert("Payment verification failed. Please contact support.");
+                        toastWarning("Payment verification failed. Please contact support.");
                     }
                 },
                 prefill: {
@@ -312,7 +313,7 @@ function DashboardProducts() {
 
         } catch (err) {
             console.error("BUY NOW ERROR:", err);
-            alert(`Payment failed: ${err.message || "An unexpected error occurred"}`);
+            toastWarning(`Payment failed: ${err.message || "An unexpected error occurred"}`);
         }
     };
 

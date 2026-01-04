@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Trash2, Minus, Plus, ShoppingCart, Truck, Shield, Wallet, ArrowLeft, CreditCard, Star } from "lucide-react";
+import { toastError, toastInfo, toastSuccess, toastWarning } from "./Toast";
 
 
 function Cart() {
@@ -155,7 +156,7 @@ function Cart() {
     // New function to handle address confirmation and proceed to payment
     const handleConfirmAddress = async () => {
         if (!selectedAddressId) {
-            alert("Please select a delivery address before placing the order.");
+            toastWarning("Please select a delivery address before placing the order.");
             return;
         }
         setShowAddressModal(false);
@@ -190,7 +191,7 @@ function Cart() {
             // Load Razorpay script first
             const scriptLoaded = await loadRazorpayScript();
             if (!scriptLoaded) {
-                alert("Razorpay SDK failed to load. Check your internet connection.");
+                toastError("Razorpay SDK failed to load. Check your internet connection.");
                 setUpdating(false);
                 return;
             }
@@ -221,7 +222,7 @@ function Cart() {
             }).filter(Boolean); // Remove any null items
 
             if (products.length === 0) {
-                alert("No valid items in cart.");
+                toastError("No valid items in cart.");
                 setUpdating(false);
                 return;
             }
@@ -231,7 +232,7 @@ function Cart() {
 
             // Safeguard against invalid amount
             if (!totalAmount || totalAmount <= 0) {
-                alert("Invalid cart total. Please check your items.");
+                toastInfo("Invalid cart total. Please check your items.");
                 setUpdating(false);
                 return;
             }
@@ -279,17 +280,16 @@ function Cart() {
                         );
 
                         if (data.success) {
-                            alert("✅ Payment verified and successful!");
+                            toastSuccess("✅ Payment verified and successful!");
                             // Clear cart after successful payment (optional - backend should handle this)
                             setCart([]);
                             navigate("/");
                         } else {
-                            alert("❌ Payment verification failed!");
+                            toastError("❌ Payment verification failed!");
                         }
                     } catch (err) {
                         console.error("Payment verification error:", err);
-                        alert("❌ Payment verification failed!");
-                    }
+              }
                 },
                 prefill: {
                     name: "",
@@ -309,7 +309,7 @@ function Cart() {
 
         } catch (err) {
             console.error("💥 Payment Error:", err);
-            alert(err.response?.data?.message || err.message || "Error initiating payment. Please try again.");
+            toastWarning(err.response?.data?.message || err.message || "Error initiating payment. Please try again.");
             setUpdating(false);
         }
     };

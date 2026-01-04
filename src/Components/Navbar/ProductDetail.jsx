@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import { toastSuccess, toastError, toastInfo, toastWarning } from "../Toast";
+
 import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
 
@@ -25,36 +28,14 @@ function ProductDetails() {
     const [buyingProduct, setBuyingProduct] = useState(null);
     const [buyingQuantity, setBuyingQuantity] = useState(1);
 
-    // Mock reviews data - replace with actual API call
-    const [reviews] = useState([
-        {
-            id: 1,
-            name: "Raj Sharma",
-            rating: 5,
-            date: "2 days ago",
-            comment: "Excellent quality product! The prasad was fresh and the delivery was very quick. Highly recommended for all devotees.",
-            verified: true,
-            helpful: 12
-        },
-        {
-            id: 2,
-            name: "Priya Gupta",
-            rating: 4,
-            date: "1 week ago",
-            comment: "Good quality but packaging could be better. Overall satisfied with the purchase.",
-            verified: true,
-            helpful: 8
-        },
-        {
-            id: 3,
-            name: "Amit Kumar",
-            rating: 5,
-            date: "2 weeks ago",
-            comment: "Perfect for my daily prayers. The product matches exactly what was shown in images.",
-            verified: false,
-            helpful: 15
-        }
-    ]);
+    // Reviews state - replace mock with fetched data
+    const [reviews, setReviews] = useState([]);
+    const [reviewsLoading, setReviewsLoading] = useState(true);
+
+    // Review modal states
+    const [showReviewModal, setShowReviewModal] = useState(false);
+    const [reviewRating, setReviewRating] = useState(5);
+    const [reviewComment, setReviewComment] = useState('');
 
     // helper to load addresses from profile
     const fetchAddresses = async () => {
@@ -80,6 +61,73 @@ function ProductDetails() {
         }
     };
 
+    // Fetch reviews function
+    const fetchReviews = async () => {
+        try {
+            setReviewsLoading(true);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/review/allreviews/${id}`);
+            setReviews(res.data.reviews || []);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+            setReviews([]);
+        } finally {
+            setReviewsLoading(false);
+        }
+    };
+
+    // Submit review function
+    const handleSubmitReview = async () => {
+        if (reviewRating < 1 || !reviewComment.trim()) {
+            toastWarning("Please provide a rating and comment.");
+            return;
+        }
+        try {
+            const token = localStorage.getItem("mahakalToken");
+            if (!token) {
+                toastWarning("Please login to write a review");
+                navigate("/login");
+                return;
+            }
+            const res = await axios.post(
+                `${import.meta.env.VITE_API_URL}/review/addreview`,
+                {
+                    productId: id,
+                    rating: reviewRating,
+                    comment: reviewComment
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            if (res.data.success) {
+                toastSuccess("Review submitted successfully!");
+                setShowReviewModal(false);
+                setReviewRating(5);
+                setReviewComment('');
+                fetchReviews(); // Refetch to update list
+            } else {
+                toastError(res.data.message || "Failed to submit review");
+            }
+        } catch (err) {
+            console.error("Error submitting review:", err);
+            toastError(err.response?.data?.message || "Failed to submit review");
+        }
+    };
+
+    // Format review date
+    const formatReviewDate = (dateString) => {
+        const now = new Date();
+        const reviewDate = new Date(dateString);
+        const diffTime = Math.abs(now - reviewDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays < 1) return 'Today';
+        if (diffDays === 1) return '1 day ago';
+        return `${diffDays} days ago`;
+    };
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -94,12 +142,31 @@ function ProductDetails() {
             }
         };
         fetchProduct();
+        fetchReviews();
     }, [id]);
 
     // call once on mount
     useEffect(() => {
         fetchAddresses();
     }, []);
+
+    // Computed values for ratings
+    const averageRating = reviews.length > 0
+        ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+        : 5.0;
+    const ratingCount = reviews.length;
+
+    const getRatingDistribution = () => {
+        const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        reviews.forEach((r) => {
+            dist[r.rating] = (dist[r.rating] || 0) + 1;
+        });
+        return [5, 4, 3, 2, 1].map((star) => {
+            const count = dist[star];
+            const perc = ratingCount > 0 ? Math.round((count / ratingCount) * 100) : 0;
+            return { star, perc };
+        });
+    };
 
     const increaseQuantity = () => {
         setQuantity(prev => prev + 1);
@@ -148,7 +215,7 @@ function ProductDetails() {
     // New function to handle address confirmation and proceed to payment
     const handleConfirmAddress = async () => {
         if (!selectedAddressId) {
-            alert("Please select a delivery address before placing the order.");
+            toastWarning("Please select a delivery address before placing the order.");
             return;
         }
         setShowAddressModal(false);
@@ -178,7 +245,7 @@ function ProductDetails() {
 
             const token = localStorage.getItem("mahakalToken");
             if (!token) {
-                alert("Please login to continue");
+                toastWarning("Please login to continue");
                 navigate("/login");
                 return;
             }
@@ -186,7 +253,7 @@ function ProductDetails() {
             // Load Razorpay
             const scriptLoaded = await loadRazorpayScript();
             if (!scriptLoaded) {
-                alert("Razorpay SDK failed to load.");
+                toastWarning("Razorpay SDK failed to load.");
                 return;
             }
 
@@ -196,12 +263,12 @@ function ProductDetails() {
 
             // Added: Safeguard against invalid price
             if (!finalPrice || finalPrice <= 0) {
-                alert("Invalid product price. Please try again.");
+                toastInfo("Invalid product price. Please try again.");
                 return;
             }
 
             if (finalAmount < 1) {
-                alert("Amount must be at least ₹1.");
+                toastWarning("Amount must be at least ₹1.");
                 return;
             }
 
@@ -264,14 +331,14 @@ function ProductDetails() {
                         );
 
                         if (verifyRes.data.success) {
-                            alert("Payment Successful!");
+                            toastSuccess("Payment Successful!");
                             navigate("/");
                         } else {
-                            alert("Payment verification failed.");
+                            toastWarning("Payment verification failed.");
                         }
                     } catch (verifyErr) {
                         console.error("Verification error:", verifyErr);
-                        alert("Payment verification failed.");
+                        toastError("Payment verification failed.");
                     }
                 },
                 prefill: {
@@ -289,7 +356,7 @@ function ProductDetails() {
 
         } catch (err) {
             console.error("BUY NOW ERROR:", err);
-            alert(err.response?.data?.message || err.message || "Payment failed");
+            toastError(err.response?.data?.message || err.message || "Payment failed");
         }
     };
 
@@ -298,7 +365,7 @@ function ProductDetails() {
         try {
             const token = localStorage.getItem("mahakalToken");
             if (!token) {
-                alert("Please login to add items to cart");
+                toastWarning("Please login to add items to cart");
                 navigate("/login");
                 return;
             }
@@ -311,13 +378,13 @@ function ProductDetails() {
             );
 
             if (res.data.success) {
-                alert("Item added to cart!");
+                toastSuccess("Item added to cart.")
             } else {
-                alert(res.data.message || "Failed to add item");
+                toastWarning(res.data.message || "Failed to add item");
             }
         } catch (error) {
             console.error("Error adding to cart:", error);
-            alert("Something went wrong!");
+            toastError("Something went wrong!");
         }
     };
 
@@ -446,15 +513,15 @@ function ProductDetails() {
                                     <Star
                                         key={i}
                                         size={20}
-                                        className={i < Math.round(product.rating?.average || 5) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
+                                        className={i < Math.round(averageRating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
                                     />
                                 ))}
                             </div>
                             <span className="text-lg font-bold text-gray-900">
-                                {product.rating?.average || 5.0}
+                                {averageRating}
                             </span>
                             <span className="text-gray-500">
-                                ({product.rating?.count || reviews.length} reviews)
+                                ({ratingCount} reviews)
                             </span>
                         </div>
 
@@ -666,100 +733,125 @@ function ProductDetails() {
                     <div>
                         <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
                             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-0">Customer Reviews</h2>
-                            <button className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-3 rounded-xl font-bold hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg">
+                            <button
+                                onClick={() => setShowReviewModal(true)}
+                                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-3 rounded-xl font-bold hover:from-orange-700 hover:to-red-700 transition-all transform hover:scale-105 shadow-lg"
+                            >
                                 Write Review
                             </button>
                         </div>
 
-                        {/* Reviews Summary */}
-                        <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-8 rounded-2xl border border-orange-100 mb-12">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                <div className="text-center">
-                                    <div className="text-5xl font-bold text-gray-900 mb-3">
-                                        {product.rating?.average || 4.7}
-                                    </div>
-                                    <div className="flex justify-center mb-3">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                size={24}
-                                                className={i < Math.round(product.rating?.average || 4.7) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
-                                            />
-                                        ))}
-                                    </div>
-                                    <div className="text-gray-600 text-lg">Based on {reviews.length} reviews</div>
-                                </div>
-                                <div className="md:col-span-2">
-                                    {[5, 4, 3, 2, 1].map(star => (
-                                        <div key={star} className="flex items-center gap-4 mb-3">
-                                            <span className="text-sm w-3 font-medium">{star}</span>
-                                            <Star size={18} className="fill-yellow-400 stroke-yellow-400" />
-                                            <div className="flex-1 bg-gray-200 rounded-full h-3">
-                                                <div
-                                                    className="bg-yellow-400 h-3 rounded-full transition-all"
-                                                    style={{ width: `${star === 5 ? 70 : star === 4 ? 25 : 5}%` }}
-                                                ></div>
-                                            </div>
-                                            <span className="text-sm text-gray-600 w-12 font-medium">
-                                                {star === 5 ? '70%' : star === 4 ? '25%' : '5%'}
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
+                        {reviewsLoading ? (
+                            <div className="text-center py-8">
+                                <Loader2 className="animate-spin mx-auto h-8 w-8 text-orange-600" />
+                                <p className="mt-2 text-gray-600">Loading reviews...</p>
                             </div>
-                        </div>
-
-                        {/* Individual Reviews */}
-                        <div className="space-y-8">
-                            {reviews.map((review) => (
-                                <div key={review.id} className="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
-                                    <div className="flex items-start justify-between mb-6">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                                                {review.name.charAt(0)}
+                        ) : (
+                            <>
+                                {/* Reviews Summary */}
+                                {ratingCount > 0 && (
+                                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-8 rounded-2xl border border-orange-100 mb-12">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                            <div className="text-center">
+                                                <div className="text-5xl font-bold text-gray-900 mb-3">
+                                                    {averageRating}
+                                                </div>
+                                                <div className="flex justify-center mb-3">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            size={24}
+                                                            className={i < Math.round(averageRating) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <div className="text-gray-600 text-lg">Based on {ratingCount} reviews</div>
                                             </div>
-                                            <div>
-                                                <div className="flex items-center gap-3 mb-2">
-                                                    <h4 className="font-bold text-gray-900 text-lg">{review.name}</h4>
-                                                    {review.verified && (
-                                                        <span className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full font-semibold">
-                                                            Verified Purchase
+                                            <div className="md:col-span-2">
+                                                {getRatingDistribution().map(({ star, perc }) => (
+                                                    <div key={star} className="flex items-center gap-4 mb-3">
+                                                        <span className="text-sm w-3 font-medium">{star}</span>
+                                                        <Star size={18} className="fill-yellow-400 stroke-yellow-400" />
+                                                        <div className="flex-1 bg-gray-200 rounded-full h-3">
+                                                            <div
+                                                                className="bg-yellow-400 h-3 rounded-full transition-all"
+                                                                style={{ width: `${perc}%` }}
+                                                            ></div>
+                                                        </div>
+                                                        <span className="text-sm text-gray-600 w-12 font-medium">
+                                                            {perc}%
                                                         </span>
-                                                    )}
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                size={18}
-                                                                className={i < review.rating ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
-                                                            />
-                                                        ))}
                                                     </div>
-                                                    <span className="text-gray-500">{review.date}</span>
-                                                </div>
+                                                ))}
                                             </div>
                                         </div>
                                     </div>
-                                    <p className="text-gray-700 mb-6 leading-relaxed text-lg">{review.comment}</p>
-                                    <div className="flex items-center gap-6">
-                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
-                                            <ThumbsUp size={18} />
-                                            <span>Helpful ({review.helpful})</span>
-                                        </button>
-                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
-                                            <MessageCircle size={18} />
-                                            <span>Reply</span>
-                                        </button>
-                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
-                                            <Share2 size={18} />
-                                            <span>Share</span>
-                                        </button>
+                                )}
+
+                                {/* Individual Reviews */}
+                                {ratingCount === 0 ? (
+                                    <div className="text-center py-12 text-gray-500">
+                                        <p className="text-lg">No reviews yet.</p>
+                                        <p className="mt-2">Be the first to share your experience!</p>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                ) : (
+                                    <div className="space-y-8">
+                                        {reviews.map((review) => {
+                                            const userName = review.user.name || 'Anonymous';
+                                            const userInitial = userName.charAt(0).toUpperCase();
+                                            return (
+                                                <div key={review._id} className="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+                                                    <div className="flex items-start justify-between mb-6">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                                                                {userInitial}
+                                                            </div>
+                                                            <div>
+                                                                <div className="flex items-center gap-3 mb-2">
+                                                                    <h4 className="font-bold text-gray-900 text-lg">{userName}</h4>
+                                                                    {review.verified && (
+                                                                        <span className="bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full font-semibold">
+                                                                            Verified Purchase
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="flex">
+                                                                        {[...Array(5)].map((_, i) => (
+                                                                            <Star
+                                                                                key={i}
+                                                                                size={18}
+                                                                                className={i < review.rating ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"}
+                                                                            />
+                                                                        ))}
+                                                                    </div>
+                                                                    <span className="text-gray-500">{formatReviewDate(review.createdAt)}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <p className="text-gray-700 mb-6 leading-relaxed text-lg">{review.comment}</p>
+                                                    {/* <div className="flex items-center gap-6">
+                                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
+                                                            <ThumbsUp size={18} />
+                                                            <span>Helpful ({review.helpful || 0})</span>
+                                                        </button>
+                                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
+                                                            <MessageCircle size={18} />
+                                                            <span>Reply</span>
+                                                        </button>
+                                                        <button className="flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors font-medium">
+                                                            <Share2 size={18} />
+                                                            <span>Share</span>
+                                                        </button>
+                                                    </div> */}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -839,6 +931,73 @@ function ProductDetails() {
                                     </button>
                                 </>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Review Modal */}
+            {showReviewModal && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-60 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto shadow-2xl">
+                        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
+                            <h2 className="text-xl font-bold text-gray-800">Write Your Review</h2>
+                            <button
+                                onClick={() => {
+                                    setShowReviewModal(false);
+                                    setReviewRating(5);
+                                    setReviewComment('');
+                                }}
+                                className="text-gray-600 hover:text-gray-800 rounded-full p-2 transition"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="p-4">
+                            <p className="mb-4 text-gray-700">How would you rate this product?</p>
+                            <div className="flex justify-center mb-4 gap-1">
+                                {[5, 4, 3, 2, 1].map((star) => (
+                                    <button
+                                        key={star}
+                                        onClick={() => setReviewRating(star)}
+                                        className="p-1"
+                                    >
+                                        <Star
+                                            size={28}
+                                            className={`cursor-pointer transition ${reviewRating >= star ? 'fill-yellow-400 stroke-yellow-400' : 'stroke-gray-300'
+                                                }`}
+                                        />
+                                    </button>
+                                ))}
+                            </div>
+                            <textarea
+                                value={reviewComment}
+                                onChange={(e) => setReviewComment(e.target.value)}
+                                placeholder="Share your experience with this product..."
+                                className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                rows={4}
+                            />
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => {
+                                        setShowReviewModal(false);
+                                        setReviewRating(5);
+                                        setReviewComment('');
+                                    }}
+                                    className="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSubmitReview}
+                                    disabled={reviewRating < 1 || !reviewComment.trim()}
+                                    className="flex-1 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+                                >
+                                    Submit Review
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

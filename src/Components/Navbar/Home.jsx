@@ -11,9 +11,6 @@ function Home() {
     return (
         <>
             <>
-
-
-
                 <div className="pt-4">
                     <TempleSlider />
                 </div>

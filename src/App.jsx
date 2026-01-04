@@ -1,6 +1,10 @@
 
 import './App.css'
 import { Routes, Route, BrowserRouter } from "react-router-dom"
+
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 import Products from './Components/Navbar/Products'
 import Navbar from './Components/Navbar/Navbar'
 import Home from './Components/Navbar/Home'
@@ -47,8 +51,19 @@ function App() {
           <Route path="/RefundReturnPolicy" element={<RefundReturnPolicy />} />
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/ContactUs" element={<ContactUs />} />
-          
+
+
+
         </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnHover
+          theme="light"
+        />
         <HomeFooter />
 
       </BrowserRouter>

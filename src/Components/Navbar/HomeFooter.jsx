@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaInstagram, FaWhatsapp, FaFacebook } from "react-icons/fa";
 import axios from "axios";
+import { toastSuccess } from "../Toast";
 
 export default function HomeFooter() {
     const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ export default function HomeFooter() {
 
             if (res.data.success) {
                 setResponseMsg("Your message has been sent successfully!");
-                window.alert("Your message has been sent successfully!");
+                toastSuccess("Your message has been sent successfully!");
             }
         } catch (error) {
             setResponseMsg("Failed to send message. Please try again.");

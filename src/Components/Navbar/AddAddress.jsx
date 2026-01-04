@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toastSuccess, toastWarning } from "../Toast";
 
 function AddAddress() {
 
@@ -39,11 +40,11 @@ function AddAddress() {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            alert("Address added successfully!");
+            toastSuccess("Address added successfully!");
             navigate("/profile"); // redirect back to profile
         } catch (err) {
             console.error(err);
-            alert("Failed to add address");
+            toastWarning("Failed to add address");
         } finally {
             setLoading(false);
         }

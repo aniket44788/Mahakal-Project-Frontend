@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { toastSuccess, toastWarning } from "../Toast";
 
 function UpdateAddress() {
     const navigate = useNavigate();
@@ -54,11 +55,11 @@ function UpdateAddress() {
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            alert("Address updated successfully!");
+            toastSuccess("Address updated successfully!");
             navigate("/profile"); // redirect back to profile page
         } catch (err) {
             console.error(err);
-            alert("Failed to update address");
+            toastWarning("Failed to update address");
         } finally {
             setLoading(false);
         }

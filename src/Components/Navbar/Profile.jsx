@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import HomeFooter from "./HomeFooter";
+import { toastError, toastSuccess } from "../Toast";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -141,9 +142,9 @@ function Profile() {
       });
 
       setUser((prev) => ({ ...prev, addresses: res.data.addresses }));
-      alert("Address deleted successfully");
+      toastSuccess("Address deleted successfully");
     } catch (err) {
-      alert("Failed to delete address");
+      toastError("Failed to delete address");
       console.error(err);
     }
   };
