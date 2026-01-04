@@ -271,7 +271,7 @@ function DashboardProducts() {
                 key: import.meta.env.VITE_APP_RAZORPAY,
                 amount: res.data.razorpayOrder.amount,
                 currency: res.data.razorpayOrder.currency,
-                name: "Mahakal Store",
+                name: "Mahakal Bazar",
                 description: product.templePrasadTitle,
                 order_id: res.data.razorpayOrder.id,
 
@@ -690,7 +690,7 @@ function DashboardProducts() {
 
                                     {/* Action Buttons */}
                                     <div className="flex gap-3">
-                                       
+
                                         <button
                                             onClick={() => { closeModal(); initiateBuy(selectedProduct, quantity); }}
                                             className="flex-1 bg-orange-400 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded-lg transition shadow-md"

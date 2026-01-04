@@ -9,7 +9,7 @@ function PrivacyPolicy() {
                 </h1>
 
                 <p className="text-gray-700 mb-4">
-                    Welcome to <strong>Mahakal Bhakti Bazaar</strong>. We value your trust and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you access or purchase from our website.
+                    Welcome to <strong>Mahakal Bazar</strong>. We value your trust and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you access or purchase from our website.
                 </p>
 
                 <h2 className="text-2xl font-semibold mt-6 mb-2">Information We Collect</h2>

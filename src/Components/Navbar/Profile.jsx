@@ -470,8 +470,8 @@ function Profile() {
           )}
         </div>
       </div>
-
-      <HomeFooter />
+{/* 
+      <HomeFooter /> */}
     </>
   );
 }

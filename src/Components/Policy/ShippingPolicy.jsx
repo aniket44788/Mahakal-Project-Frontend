@@ -7,7 +7,7 @@ function ShippingPolicy() {
         <h1 className="text-4xl font-bold text-center mb-6">Shipping Policy</h1>
 
         <p className="text-gray-700 mb-4">
-          Thank you for choosing <strong>Mahakal Bhakti Bazaar</strong>.
+          Thank you for choosing <strong>Mahakal Bazar</strong>.
           We aim to deliver sacred Prasad and devotional items with care and
           respect, ensuring proper packaging and timely delivery across India.
         </p>

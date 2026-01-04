@@ -9,7 +9,7 @@ function TermsCondition() {
         </h1>
 
         <p className="text-gray-700 mb-4">
-          Welcome to <strong>Mahakal Bhakti Bazaar</strong>. By accessing or purchasing from our platform, you agree to the following terms and conditions. Please read them carefully before placing any order.
+          Welcome to <strong>Mahakal Bazar</strong>. By accessing or purchasing from our platform, you agree to the following terms and conditions. Please read them carefully before placing any order.
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">General Use</h2>
@@ -51,7 +51,7 @@ function TermsCondition() {
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Intellectual Property</h2>
         <p className="mb-4">
-          All content, images, and designs on this site are the property of <strong>Mahakal Bhakti Bazaar</strong>. Copying or redistribution without written permission is prohibited.
+          All content, images, and designs on this site are the property of <strong>Mahakal Bazar</strong>. Copying or redistribution without written permission is prohibited.
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Limitation of Liability</h2>

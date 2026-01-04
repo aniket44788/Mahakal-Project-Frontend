@@ -9,7 +9,7 @@ function RefundReturnPolicy() {
                 </h1>
 
                 <p className="text-gray-700 mb-4">
-                    Thank you for shopping with <strong>Mahakal Bhakti Bazaar</strong>.
+                    Thank you for shopping with <strong>Mahakal Bazar</strong>.
                     As our products include sacred Prasad and perishable devotional items,
                     we follow strict hygiene and packaging guidelines. For this reason,
                     once the order is placed and confirmed, it <strong>cannot be cancelled or returned</strong>.

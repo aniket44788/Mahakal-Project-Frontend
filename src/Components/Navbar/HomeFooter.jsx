@@ -136,7 +136,7 @@ export default function HomeFooter() {
             </div>
 
             <div className="border-t border-orange-300 mt-12 pt-6 text-center text-sm md:text-base">
-                © 2025 Mahakal Bhakti Bazaar — All Rights Reserved.
+                © 2025 Mahakal Bazar — All Rights Reserved.
             </div>
         </footer>
     );

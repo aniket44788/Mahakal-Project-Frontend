@@ -314,7 +314,7 @@ function ProductDetails() {
                 key: import.meta.env.VITE_APP_RAZORPAY,
                 amount: res.data.razorpayOrder.amount,      // ✔ Comes from backend (already *100)
                 currency: res.data.razorpayOrder.currency,  // ✔ "INR"
-                name: import.meta.env.VITE_APP_NAME || "Mahakal Store",
+                name: import.meta.env.VITE_APP_NAME || "Mahakal Bazar",
                 description: product.templePrasadTitle,     // ✔ correct field
                 order_id: res.data.razorpayOrder.id,        // ✔ Razorpay order id
 
