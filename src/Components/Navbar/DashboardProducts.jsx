@@ -15,6 +15,7 @@ function DashboardProducts() {
     const [wishlist, setWishlist] = useState(0);
     const [autoSlide, setAutoSlide] = useState(true);
 
+
     // this is address fetch from profile 
     // --- near other useState declarations, e.g. after selectedProduct, quantity etc.
     const [addresses, setAddresses] = useState([]);           // all user's addresses
@@ -312,8 +313,7 @@ function DashboardProducts() {
             paymentObj.open();
 
         } catch (err) {
-            console.error("BUY NOW ERROR:", err);
-            toastWarning(`Payment failed: ${err.message || "An unexpected error occurred"}`);
+            toastWarning(`Payment failed , An unexpected error occurred `);
         }
     };
 

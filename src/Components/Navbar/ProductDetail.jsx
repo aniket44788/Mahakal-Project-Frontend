@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { toastSuccess, toastError, toastInfo, toastWarning } from "../Toast";
+import { toastSuccess, toastError, toastInfo, toastWarning, toastOrderSuccess } from "../Toast";
 
 import { Star, ShoppingCart, Heart, MapPin, Truck, Shield, Wallet, Award, ThumbsUp, MessageCircle, Share2, ChevronLeft, ChevronRight, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 
@@ -331,7 +331,7 @@ function ProductDetails() {
                         );
 
                         if (verifyRes.data.success) {
-                            toastSuccess("Payment Successful!");
+                            toastOrderSuccess()
                             navigate("/");
                         } else {
                             toastWarning("Payment verification failed.");
