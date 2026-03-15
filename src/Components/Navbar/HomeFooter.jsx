@@ -122,7 +122,7 @@ export default function HomeFooter() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-orange-700 transition disabled:bg-orange-300"
+                            className="w-full bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:bg-orange-700 transition disabled:bg-orange-300"
                         >
                             {loading ? "Sending..." : "Send Message"}
                         </button>

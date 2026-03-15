@@ -1,6 +1,9 @@
-
 import './App.css'
 import { Routes, Route, BrowserRouter } from "react-router-dom"
+import { useEffect } from "react"
+
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -22,39 +25,42 @@ import TermsCondition from './Components/Policy/TermsCondition'
 import RefundReturnPolicy from './Components/Policy/RefundReturnPolicy'
 import ShippingPolicy from './Components/Policy/ShippingPolicy'
 import ContactUs from './Components/Policy/ContactUs'
-import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
-// import Categories from './Category'
-import DashboardProducts from './Components/Navbar/DashboardProducts'
+// import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
+
 function App() {
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,     // scroll pe ek hi baar
+      easing: "ease-in-out",
+    });
+  }, []);
 
   return (
     <>
       <BrowserRouter>
         <Navbar />
-        {/* <Categories /> */}
+
         <Routes>
-          <Route path='/' element={<Home />}>   </Route>
-          <Route path='/products' element={<Products />}>   </Route>
-          <Route path='/temples' element={<Temples />}>   </Route>
-          <Route path='/donation' element={<Donation />}>   </Route>
-          <Route path='/single/:id' element={<ProductDetails />}>   </Route>
-          <Route path='/profile' element={<Profile />}>   </Route>
+          <Route path='/' element={<Home />} />
+          <Route path='/products' element={<Products />} />
+          <Route path='/temples' element={<Temples />} />
+          <Route path='/donation' element={<Donation />} />
+          <Route path='/single/:id' element={<ProductDetails />} />
+          <Route path='/profile' element={<Profile />} />
           <Route path="/order/:orderId" element={<OrderDetails />} />
-          <Route path='/address' element={<AddAddress />}>   </Route>
-          <Route path='/address/update/:id' element={<UpdateAddress />}>   </Route>
+          <Route path='/address' element={<AddAddress />} />
+          <Route path='/address/update/:id' element={<UpdateAddress />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/cart" element={<Cart />} />
-          {/* <Route path="/dashboardproducts" element={<DashboardProducts />} /> */}
-
           <Route path="/termscondition" element={<TermsCondition />} />
-          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          {/* <Route path="/privacypolicy" element={<PrivacyPolicy />} /> */}
           <Route path="/RefundReturnPolicy" element={<RefundReturnPolicy />} />
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/ContactUs" element={<ContactUs />} />
-
-
-
         </Routes>
+
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -64,10 +70,9 @@ function App() {
           pauseOnHover
           theme="light"
         />
+
         <HomeFooter />
-
       </BrowserRouter>
-
     </>
   )
 }

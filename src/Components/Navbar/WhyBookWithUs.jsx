@@ -26,7 +26,7 @@ const WhyBookWithUs = () => {
   ];
 
   return (
-    <div className="py-10 bg-white">
+    <div className="py-10 bg-white" >
       <h2 className="text-2xl font-bold text-center">Why Us for Your Devotion?</h2>
       <p className="text-gray-500 text-center mb-10">
         Delivering temples, traditions, and blessings

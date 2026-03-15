@@ -11,10 +11,11 @@ function Home() {
     return (
         <>
             <>
-                <div className="pt-4">
+                <div className="pt-4" data-aos="zoom-in">
+
                     <TempleSlider />
                 </div>
-                <div className="w-full flex flex-col justify-center items-center text-center my-10 px-4">
+                <div className="w-full flex flex-col justify-center items-center text-center my-10 px-4" >
                     <h2
                         className="text-4xl mb-2 md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-orange-500 via-amber-600 to-yellow-500 
                bg-clip-text text-transparent drop-shadow-md animate-fade-in"
@@ -47,7 +48,7 @@ function Home() {
                 <div>
                     <HowItWorks />
                 </div>
-               
+
             </>
         </>
     )

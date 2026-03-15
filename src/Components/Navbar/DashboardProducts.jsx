@@ -357,10 +357,8 @@ function DashboardProducts() {
     }
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white ">
             {/* Header Section */}
-
-
             {/* All Products List - Full width, line wise */}
             <div className="w-full py-8 bg-gray-50">
                 <div className="px-4 sm:px-6 lg:px-8">

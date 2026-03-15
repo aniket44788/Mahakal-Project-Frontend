@@ -43,14 +43,13 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("mahakalToken");
-        if (!token) {
-          setError("Please log in to view your profile.");
-          setLoading(false);
-          return;
-        }
+      const token = localStorage.getItem("mahakalToken");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
 
+      try {
         const [profileRes, ordersRes] = await Promise.all([
           axios.get(`${API_URL}/user/profile`, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(`${API_URL}/api/payment/myorders`, { headers: { Authorization: `Bearer ${token}` } }),
@@ -62,10 +61,19 @@ function Profile() {
         setUser(userData);
         setEditName(userData.name || "");
         setImagePreview(userData.profileImage || "/shivmahakal.png");
-        setLoading(false);
+
+        if (!userData.addresses || userData.addresses.length === 0) {
+          navigate("/address");
+        }
       } catch (err) {
         console.error(err);
-        setError(err.response?.data?.message || "Failed to load profile");
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem("mahakalToken");
+          navigate("/login");
+        } else {
+          setError(err.response?.data?.message || "Failed to load profile");
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -308,11 +316,10 @@ function Profile() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`flex-1 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap ${
-                    activeTab === tab
+                  className={`flex-1 px-6 py-4 text-sm font-medium transition-colors whitespace-nowrap ${activeTab === tab
                       ? "border-b-2 border-orange-500 text-orange-600"
                       : "text-gray-500 hover:text-gray-700"
-                  }`}
+                    }`}
                 >
                   {tab === "overview" ? "Account Overview" : "My Orders"}
                 </button>
@@ -470,7 +477,7 @@ function Profile() {
           )}
         </div>
       </div>
-{/* 
+      {/* 
       <HomeFooter /> */}
     </>
   );
