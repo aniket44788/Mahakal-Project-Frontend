@@ -337,55 +337,6 @@ function DashboardProducts() {
   return (
     <div className=" bg-gray-50">
       {/* Header */}
-      <div className="bg-white sticky top-0 z-40 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-                Sacred Offerings
-              </h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                {products.length} divine items available
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <button className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors">
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                <span className="absolute -top-1 -right-1 bg-orange-600 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                  0
-                </span>
-              </button>
-              <button className="p-2 bg-orange-100 rounded-full text-orange-600 hover:bg-orange-200 transition-colors">
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
@@ -401,7 +352,7 @@ function DashboardProducts() {
             return (
               <div
                 key={product._id}
-                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-orange-200 flex flex-col"
+                className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
               >
                 {/* Image Section */}
                 <div className="relative">
@@ -539,7 +490,6 @@ function DashboardProducts() {
                     )}
                   </div>
 
-                  {/* Description - Hidden on mobile */}
                   {/* Description */}
                   <p className="text-xs text-gray-600 mb-3">
                     <span className="hidden sm:block">
@@ -558,13 +508,13 @@ function DashboardProducts() {
                   <div className="flex gap-2 mt-auto pt-2">
                     <button
                       onClick={() => fetchProductById(product._id)}
-                      className="flex-1 bg-blue-50 text-blue-600 text-xs sm:text-sm font-medium py-2 sm:py-2.5 rounded-lg hover:bg-blue-100 transition-colors"
-                    >
+                      className="flex-1 cursor-pointer bg-blue-50 text-blue-600 text-xs sm:text-sm font-medium py-2 sm:py-2.5 rounded-lg hover:bg-blue-100 transition-colors"
+                    > 
                       Details
                     </button>
                     <button
                       onClick={() => initiateBuy(product, 1)}
-                      className="flex-1 bg-orange-600 text-white text-xs sm:text-sm font-medium py-2 sm:py-2.5 rounded-lg hover:bg-orange-700 transition-colors shadow-sm"
+                      className="flex-1 cursor-pointer bg-orange-600 text-white text-xs sm:text-sm font-medium py-2 sm:py-2.5 rounded-lg hover:bg-orange-700 transition-colors shadow-sm"
                     >
                       Buy Now
                     </button>
