@@ -61,8 +61,6 @@ function App() {
           <Route path="/ShippingPolicy" element={<ShippingPolicy />} />
           <Route path="/ContactUs" element={<ContactUs />} />
           <Route path="/order-done" element={<OrderSuccess />} />
-
-          
         </Routes>
 
         <ToastContainer
@@ -73,8 +71,8 @@ function App() {
           closeOnClick
           pauseOnHover
           theme="light"
+          toastClassName="dharmic-toast"
         />
-
         <HomeFooter />
       </BrowserRouter>
     </>

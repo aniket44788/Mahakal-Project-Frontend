@@ -1,404 +1,352 @@
-import { Package, MapPin, Clock, Star, Calendar, Info, Shield, Heart } from "lucide-react";
+import { MapPin, Clock, Star, Shield, ChevronDown } from "lucide-react";
 import { useState, useEffect } from "react";
 
-function Temples() {
-    const [temples, setTemples] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [selectedImageIndex, setSelectedImageIndex] = useState({});
-    const [expandedSections, setExpandedSections] = useState({});
-
-    useEffect(() => {
-        const fetchTemples = async () => {
-            try {
-                const token = localStorage.getItem("mahakalToken");
-                const res = await fetch(`${import.meta.env.VITE_API_URL}/mandir/getall`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                if (!res.ok) throw new Error("Failed to fetch mandirs");
-                const data = await res.json();
-                setTemples(data.temples || []);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTemples();
-    }, []);
-
-    const toggleSection = (templeId, section) => {
-        setExpandedSections(prev => ({
-            ...prev,
-            [`${templeId}-${section}`]: !prev[`${templeId}-${section}`]
-        }));
-    };
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-orange-50 via-rose-50 to-purple-50 flex items-center justify-center">
-                <div className="text-center space-y-4">
-                    {/* Animated Om Symbol */}
-                    <div className="relative">
-                        <div className="w-24 h-24 border-4 border-orange-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-3xl animate-pulse">🕉️</span>
-                        </div>
-                    </div>
-                    <div className="space-y-2">
-                        <p className="text-orange-700 font-semibold text-lg">Loading sacred temples...</p>
-                        <p className="text-sm text-orange-500 animate-pulse">Har Har Mahadev 🙏</p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center px-4">
-                <div className="bg-white/90 backdrop-blur-xl rounded-3xl p-8 max-w-md w-full text-center shadow-2xl border border-orange-200">
-                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <span className="text-4xl">😔</span>
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">Oops! Something went wrong</h3>
-                    <p className="text-red-600 mb-6">{error}</p>
-                    <button 
-                        onClick={() => window.location.reload()}
-                        className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-red-600 transition-all shadow-lg shadow-orange-500/30"
-                    >
-                        Try Again
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen w-full bg-gradient-to-br from-orange-50 via-amber-50 to-rose-50 px-3 sm:px-4 md:px-6 lg:px-8 py-8 sm:py-12 relative overflow-x-hidden">
-            
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-                <div className="absolute top-40 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-20 left-20 w-80 h-80 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-            </div>
-
-            <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12 relative z-10">
-                
-                {/* Enhanced Page Header */}
-                <div className="text-center space-y-4 sm:space-y-6 bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-orange-200/50 shadow-2xl">
-                    <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-                        <div className="h-px w-12 sm:w-16 bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm sm:text-base font-bold tracking-wider text-orange-600">🕉️</span>
-                            <p className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-orange-600">
-                                Ujjain • Prashad Guide
-                            </p>
-                            <span className="text-sm sm:text-base font-bold tracking-wider text-orange-600">🙏</span>
-                        </div>
-                        <div className="h-px w-12 sm:w-16 bg-gradient-to-r from-orange-500 to-transparent"></div>
-                    </div>
-
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold">
-                        <span className="bg-gradient-to-r from-orange-700 via-rose-700 to-purple-800 bg-clip-text text-transparent">
-                            Sacred Temples of Ujjain
-                        </span>
-                    </h1>
-
-                    <p className="max-w-3xl mx-auto text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed px-2">
-                        Explore the divine temples, their rich history, sacred puja rituals,
-                        and practical visiting tips. Plan your spiritual journey and prashad
-                        offerings with complete guidance.
-                    </p>
-
-                    {/* Stats Counter */}
-                    <div className="flex items-center justify-center gap-4 sm:gap-8 pt-4">
-                        <div className="text-center">
-                            <div className="text-2xl sm:text-3xl font-bold text-orange-600">{temples.length}+</div>
-                            <div className="text-xs sm:text-sm text-gray-600">Divine Temples</div>
-                        </div>
-                        <div className="w-px h-8 bg-orange-200"></div>
-                        <div className="text-center">
-                            <div className="text-2xl sm:text-3xl font-bold text-orange-600">24/7</div>
-                            <div className="text-xs sm:text-sm text-gray-600">Darshan Timings</div>
-                        </div>
-                        <div className="w-px h-8 bg-orange-200"></div>
-                        <div className="text-center">
-                            <div className="text-2xl sm:text-3xl font-bold text-orange-600">100+</div>
-                            <div className="text-xs sm:text-sm text-gray-600">Prasad Varieties</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Temple Cards Grid */}
-                <div className="grid gap-6 sm:gap-8 lg:gap-10">
-                    {temples.map((temple, index) => (
-                        <TempleCard 
-                            key={temple._id} 
-                            temple={temple} 
-                            index={index}
-                            selectedImageIndex={selectedImageIndex}
-                            setSelectedImageIndex={setSelectedImageIndex}
-                            expandedSections={expandedSections}
-                            toggleSection={toggleSection}
-                        />
-                    ))}
-                </div>
-
-                {/* Footer Message with Animation */}
-                <div className="text-center bg-gradient-to-r from-orange-500/10 via-rose-500/10 to-purple-500/10 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-orange-200/30">
-                    <p className="text-sm sm:text-base text-gray-700 animate-pulse">
-                        🕉️ May your spiritual journey be blessed • Har Har Mahadev 🙏
-                    </p>
-                </div>
-            </div>
-
-            {/* Custom Animations */}
-            <style jsx>{`
-                @keyframes blob {
-                    0%, 100% { transform: translate(0px, 0px) scale(1); }
-                    33% { transform: translate(30px, -50px) scale(1.1); }
-                    66% { transform: translate(-20px, 20px) scale(0.9); }
-                }
-                .animate-blob {
-                    animation: blob 7s infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-            `}</style>
-        </div>
-    );
-}
-
-// Enhanced Temple Card Component
-const TempleCard = ({ temple, index, selectedImageIndex, setSelectedImageIndex, expandedSections, toggleSection }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    
-    return (
-        <article className="group relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 border border-orange-200/50 overflow-hidden">
-            
-            {/* Decorative Elements */}
-            <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-orange-200 to-rose-200 rounded-br-full opacity-20 group-hover:opacity-30 transition-opacity"></div>
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-tl from-purple-200 to-orange-200 rounded-tl-full opacity-20 group-hover:opacity-30 transition-opacity"></div>
-            
-            {/* Main Content - Responsive Grid */}
-            <div className="flex flex-col lg:flex-row relative z-10">
-                
-                {/* Image Section - Responsive */}
-                <div className="lg:w-5/12 w-full">
-                    <div className="relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-full min-h-[400px] lg:min-h-[500px]">
-                        {/* Main Image */}
-                        <img
-                            src={temple.images?.[selectedImageIndex[temple._id] || 0]?.url || temple.images?.[0]?.url || "/api/placeholder/600/800"}
-                            alt={temple.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                        
-                        {/* Floating Elements */}
-                        <div className="absolute top-4 right-4 flex flex-col gap-2">
-                            {/* Image Count Badge */}
-                            {temple.images?.length > 0 && (
-                                <div className="bg-black/60 backdrop-blur-md text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold border border-white/30 shadow-xl">
-                                    📸 {temple.images.length} Photos
-                                </div>
-                            )}
-                            
-                            {/* Rating Badge */}
-                            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold shadow-xl flex items-center gap-1">
-                                <Star size={14} className="fill-white" />
-                                4.9 (248)
-                            </div>
-                        </div>
-                        
-                        {/* Timings Badge - Mobile Optimized */}
-                        <div className="absolute bottom-4 left-4 right-4 sm:left-4 sm:right-auto bg-black/60 backdrop-blur-md text-white p-3 sm:px-5 sm:py-3 rounded-2xl border border-white/30 shadow-2xl flex items-center gap-2 sm:gap-3">
-                            <Clock size={18} className="text-orange-400 shrink-0" />
-                            <div className="text-xs sm:text-sm">
-                                <span className="font-bold">{temple.hours?.openingTime}</span>
-                                <span className="mx-1 text-white/60">to</span>
-                                <span className="font-bold">{temple.hours?.closingTime}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {/* Thumbnail Gallery - Scrollable */}
-                    {temple.images?.length > 1 && (
-                        <div className="p-3 sm:p-4 bg-gradient-to-r from-orange-50 to-rose-50 border-t border-orange-200">
-                            <div className="flex gap-2 sm:gap-3 overflow-x-auto scrollbar-hide">
-                                {temple.images.slice(0, 6).map((img, idx) => (
-                                    <button
-                                        key={img._id || idx}
-                                        onClick={() => setSelectedImageIndex({...selectedImageIndex, [temple._id]: idx})}
-                                        className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden transition-all duration-300 ${
-                                            (selectedImageIndex[temple._id] || 0) === idx 
-                                                ? 'ring-3 ring-orange-500 scale-95 shadow-xl' 
-                                                : 'opacity-70 hover:opacity-100 hover:scale-105'
-                                        }`}
-                                    >
-                                        <img
-                                            src={img.url}
-                                            alt={`Thumbnail ${idx + 1}`}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                ))}
-                                {temple.images.length > 6 && (
-                                    <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-orange-600 to-rose-600 flex items-center justify-center text-white font-bold text-xs border-2 border-white shadow-lg">
-                                        +{temple.images.length - 6}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-                
-                {/* Content Section - Responsive */}
-                <div className="lg:w-7/12 w-full p-4 sm:p-6 md:p-8 flex flex-col">
-                    
-                    {/* Title & Quick Info */}
-                    <div className="space-y-3 sm:space-y-4">
-                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">
-                            {temple.title}
-                        </h2>
-                        
-                        {/* Location */}
-                        <div className="flex items-start gap-2 text-sm sm:text-base text-gray-600">
-                            <MapPin size={16} className="text-orange-500 shrink-0 mt-1" />
-                            <span>
-                                {temple.location?.address}, {temple.location?.city}, {temple.location?.state} - {temple.location?.pincode}
-                            </span>
-                        </div>
-                        
-                        {/* Short Description - Truncated on Mobile */}
-                        <p className="text-sm sm:text-base text-gray-700 leading-relaxed border-l-3 border-orange-500 pl-4 py-1 bg-orange-50/50 rounded-r-lg">
-                            {temple.shortDescription}
-                        </p>
-                    </div>
-                    
-                    {/* Expandable Sections */}
-                    <div className="space-y-3 sm:space-y-4 mt-4 sm:mt-6">
-                        {/* History Section */}
-                        <Section 
-                            title="📜 Sacred History" 
-                            content={temple.history}
-                            isExpanded={expandedSections[`${temple._id}-history`]}
-                            onToggle={() => toggleSection(temple._id, 'history')}
-                            icon="history"
-                        />
-                        
-                        {/* Description Section */}
-                        <Section 
-                            title="🏛️ Temple Details" 
-                            content={temple.detailedDescription}
-                            isExpanded={expandedSections[`${temple._id}-description`]}
-                            onToggle={() => toggleSection(temple._id, 'description')}
-                            icon="info"
-                        />
-                        
-                        {/* Puja Section */}
-                        <Section 
-                            title="🙏 Puja & Rituals" 
-                            content={temple.pujaInfo}
-                            isExpanded={expandedSections[`${temple._id}-puja`]}
-                            onToggle={() => toggleSection(temple._id, 'puja')}
-                            icon="puja"
-                        />
-                        
-                        {/* Visiting Tips - Always Visible */}
-                        {temple.visitingTips && (
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-5 rounded-xl border border-green-200">
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Shield size={18} className="text-green-600" />
-                                    <h4 className="font-bold text-green-800 text-sm sm:text-base">💡 Visiting Tips</h4>
-                                </div>
-                                <p className="text-sm sm:text-base text-gray-700">{temple.visitingTips}</p>
-                            </div>
-                        )}
-                    </div>
-                    
-                    {/* Action Buttons - Stack on Mobile */}
-                    <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-6">
-                        {temple.location?.googleMapLink && (
-                            <a
-                                href={temple.location.googleMapLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-4 bg-gradient-to-r from-orange-500 to-rose-500 text-white rounded-xl font-semibold text-sm sm:text-base hover:from-orange-600 hover:to-rose-600 transition-all shadow-lg shadow-orange-500/30 active:scale-95"
-                            >
-                                <MapPin size={18} />
-                                <span>Navigate</span>
-                            </a>
-                        )}
-                        
-                        {/* <button className="flex-1 flex items-center justify-center gap-2 px-4 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-xl font-semibold text-sm sm:text-base hover:from-purple-600 hover:to-indigo-600 transition-all shadow-lg shadow-purple-500/30 active:scale-95">
-                            <Package size={18} />
-                            <span>Book Prashad</span>
-                        </button> */}
-                    </div>
-                </div>
-            </div>
-        </article>
-    );
+// ─── Dharmic Loader ───────────────────────────────────────────────────────────
+const DharmicLoader = () => {
+  const messages = ["🙏 Loading sacred temples...", "🕉️ Seeking Mahadev's blessings...", "🪔 Preparing the divine guide...", "🔱 Almost ready..."];
+  const [msgIndex, setMsgIndex] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(() => setMsgIndex((p) => (p + 1) % messages.length), 1800);
+    return () => clearInterval(iv);
+  }, []);
+  return (
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+      style={{ background: "linear-gradient(135deg,rgba(255,237,213,0.93),rgba(254,215,170,0.89),rgba(252,165,165,0.86))", backdropFilter: "blur(16px)" }}>
+      <div className="relative flex items-center justify-center mb-8">
+        <div className="w-28 h-28 rounded-full border-4 border-orange-200 border-t-orange-500 border-r-orange-400" style={{ animation: "spin 1.2s linear infinite" }} />
+        <div className="absolute w-20 h-20 rounded-full border-2 border-red-300 border-b-red-500" style={{ animation: "spinReverse 1.8s linear infinite" }} />
+        <div className="absolute text-4xl" style={{ animation: "pulse 2s ease-in-out infinite" }}>🕉️</div>
+      </div>
+      <div className="flex gap-2 mb-6">{[0,1,2,3,4].map((i) => (
+        <div key={i} className="w-2 h-2 rounded-full bg-orange-500" style={{ animation: `bounce 1.2s ease-in-out ${i*0.15}s infinite` }} />
+      ))}</div>
+      <p key={msgIndex} className="text-orange-800 font-semibold text-lg text-center px-6" style={{ animation: "fadeIn 0.5s ease-in" }}>{messages[msgIndex]}</p>
+      <p className="text-orange-600 text-sm mt-2 opacity-70">हर हर महादेव 🔱</p>
+      <style>{`
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes spinReverse{to{transform:rotate(-360deg)}}
+        @keyframes bounce{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-8px);opacity:1}}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+      `}</style>
+    </div>
+  );
 };
 
-// Collapsible Section Component
-const Section = ({ title, content, isExpanded, onToggle, icon }) => {
-    const truncatedContent = content?.length > 150 ? content.substring(0, 150) + '...' : content;
-    
-    return (
-        <div className="bg-white/50 rounded-xl border border-gray-200 overflow-hidden hover:border-orange-200 transition-colors">
-            <button
-                onClick={onToggle}
-                className="w-full flex items-center justify-between p-3 sm:p-4 text-left hover:bg-orange-50/50 transition-colors"
-            >
-                <div className="flex items-center gap-2">
-                    <span className="text-base sm:text-lg">{icon === 'history' ? '📜' : icon === 'info' ? '🏛️' : '🙏'}</span>
-                    <h4 className="font-bold text-gray-800 text-sm sm:text-base">{title}</h4>
+// ─── Collapsible Section ──────────────────────────────────────────────────────
+const Section = ({ title, content, isExpanded, onToggle }) => {
+  if (!content) return null;
+  const preview = content.length > 160 ? content.slice(0, 160) + "…" : content;
+  return (
+    <div className="rounded-2xl overflow-hidden transition-all"
+      style={{ border: "1px solid rgba(234,88,12,0.14)", background: "rgba(255,255,255,0.7)" }}>
+      <button onClick={onToggle}
+        className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-orange-50/60 transition-colors">
+        <span className="font-bold text-gray-800 text-sm">{title}</span>
+        <ChevronDown size={16} className={`text-orange-500 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} />
+      </button>
+      <div className="px-4 pb-4 text-sm text-gray-600 leading-relaxed border-t border-orange-50">
+        {isExpanded ? content : preview}
+      </div>
+    </div>
+  );
+};
+
+// ─── 4-Image Grid ─────────────────────────────────────────────────────────────
+const ImageGrid = ({ images, title }) => {
+  const [active, setActive] = useState(0);
+  const show = images?.slice(0, 4) || [];
+  const extra = (images?.length || 0) - 4;
+
+  return (
+    <div className="p-3 sm:p-4" style={{ background: "linear-gradient(135deg,#fff7ed,#fef9f5)" }}>
+      {/* Main image */}
+      <div className="relative rounded-2xl overflow-hidden mb-3 shadow-md" style={{ height: "220px", border: "2px solid rgba(234,88,12,0.12)" }}>
+        <img
+          src={show[active]?.url || "/shivmahakal.png"}
+          alt={title}
+          className="w-full h-full object-cover transition-all duration-500"
+        />
+        {/* Overlay badge */}
+        <div className="absolute top-3 left-3 flex gap-2">
+          <span className="text-xs font-bold text-white px-2.5 py-1 rounded-full"
+            style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)" }}>
+            📸 {images?.length || 0} Photos
+          </span>
+        </div>
+      </div>
+
+      {/* 4-thumbnail row */}
+      {show.length > 1 && (
+        <div className="grid grid-cols-4 gap-2">
+          {show.map((img, idx) => (
+            <button key={idx} onClick={() => setActive(idx)}
+              className="relative rounded-xl overflow-hidden transition-all duration-200 hover:scale-105"
+              style={{
+                height: "64px",
+                border: active === idx ? "2px solid #ea580c" : "2px solid rgba(234,88,12,0.15)",
+                boxShadow: active === idx ? "0 0 0 2px rgba(234,88,12,0.2)" : "none",
+              }}>
+              <img src={img.url} alt={`View ${idx+1}`} className="w-full h-full object-cover" />
+              {/* Last thumb overlay if extra */}
+              {idx === 3 && extra > 0 && (
+                <div className="absolute inset-0 bg-black/55 flex items-center justify-center">
+                  <span className="text-white font-black text-sm">+{extra}</span>
                 </div>
-                <svg
-                    className={`w-4 h-4 sm:w-5 sm:h-5 text-orange-500 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+              )}
+              {active === idx && (
+                <div className="absolute inset-0 ring-2 ring-inset ring-orange-400 rounded-xl" />
+              )}
             </button>
-            
-            {isExpanded ? (
-                <div className="p-3 sm:p-4 pt-0 text-sm sm:text-base text-gray-700 border-t border-gray-200 animate-slideDown">
-                    {content}
-                </div>
-            ) : (
-                content?.length > 150 && (
-                    <div className="px-3 sm:px-4 pb-3 sm:pb-4 text-sm sm:text-base text-gray-600">
-                        {truncatedContent}
-                    </div>
-                )
-            )}
+          ))}
         </div>
-    );
+      )}
+    </div>
+  );
 };
+
+// ─── Temple Card ──────────────────────────────────────────────────────────────
+const TempleCard = ({ temple, expandedSections, toggleSection }) => (
+  <article className="rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
+    style={{
+      background: "rgba(255,255,255,0.92)",
+      border: "1px solid rgba(234,88,12,0.15)",
+      boxShadow: "0 4px 24px rgba(234,88,12,0.07)",
+    }}>
+
+    {/* Top accent stripe */}
+    <div className="h-1 bg-gradient-to-r from-orange-400 via-red-400 to-orange-500" />
+
+    <div className="flex flex-col lg:flex-row">
+
+      {/* ── Left: Image Grid ── */}
+      <div className="lg:w-[420px] w-full flex-shrink-0 border-b lg:border-b-0 lg:border-r"
+        style={{ borderColor: "rgba(234,88,12,0.1)" }}>
+        <ImageGrid images={temple.images} title={temple.title} />
+
+        {/* Hours strip */}
+        <div className="mx-3 mb-3 px-4 py-3 rounded-2xl flex items-center gap-3"
+          style={{ background: "linear-gradient(135deg,#fff7ed,#fee2e2)", border: "1px solid rgba(234,88,12,0.18)" }}>
+          <Clock size={16} className="text-orange-500 flex-shrink-0" />
+          <div className="text-sm">
+            <span className="font-black text-gray-900">{temple.hours?.openingTime || "N/A"}</span>
+            <span className="text-gray-400 mx-2">·</span>
+            <span className="font-black text-gray-900">{temple.hours?.closingTime || "N/A"}</span>
+          </div>
+          <span className="ml-auto flex items-center gap-1 text-xs font-bold text-yellow-600 bg-yellow-50 px-2 py-0.5 rounded-full border border-yellow-200">
+            <Star size={11} className="fill-yellow-500 stroke-yellow-500" /> 4.9
+          </span>
+        </div>
+      </div>
+
+      {/* ── Right: Content ── */}
+      <div className="flex-1 p-4 sm:p-5 lg:p-6 flex flex-col">
+
+        {/* Title */}
+        <div className="mb-4">
+          <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-1">🕉️ Ujjain · Divine Temple</p>
+          <h2 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight mb-2">{temple.title}</h2>
+
+          {/* Location */}
+          <div className="flex items-start gap-2 text-sm text-gray-500">
+            <MapPin size={14} className="text-orange-400 flex-shrink-0 mt-0.5" />
+            <span className="leading-snug">
+              {[temple.location?.address, temple.location?.city, temple.location?.state, temple.location?.pincode]
+                .filter(Boolean).join(", ")}
+            </span>
+          </div>
+        </div>
+
+        {/* Short description */}
+        {temple.shortDescription && (
+          <p className="text-sm text-gray-700 leading-relaxed mb-4 px-4 py-3 rounded-xl italic"
+            style={{ background: "rgba(255,247,237,0.8)", borderLeft: "3px solid #ea580c" }}>
+            {temple.shortDescription}
+          </p>
+        )}
+
+        {/* Expandable sections */}
+        <div className="space-y-2.5 flex-1">
+          <Section
+            title="📜 Sacred History"
+            content={temple.history}
+            isExpanded={expandedSections[`${temple._id}-history`]}
+            onToggle={() => toggleSection(temple._id, "history")}
+          />
+          <Section
+            title="🏛️ Temple Details"
+            content={temple.detailedDescription}
+            isExpanded={expandedSections[`${temple._id}-description`]}
+            onToggle={() => toggleSection(temple._id, "description")}
+          />
+          <Section
+            title="🙏 Puja & Rituals"
+            content={temple.pujaInfo}
+            isExpanded={expandedSections[`${temple._id}-puja`]}
+            onToggle={() => toggleSection(temple._id, "puja")}
+          />
+
+          {/* Visiting tips — always shown */}
+          {temple.visitingTips && (
+            <div className="rounded-2xl px-4 py-3 text-sm text-green-800"
+              style={{ background: "rgba(240,253,244,0.9)", border: "1px solid rgba(134,239,172,0.5)" }}>
+              <div className="flex items-center gap-2 mb-1">
+                <Shield size={14} className="text-green-600 flex-shrink-0" />
+                <span className="font-bold text-green-700 text-xs uppercase tracking-wide">Visiting Tips</span>
+              </div>
+              <p className="leading-relaxed">{temple.visitingTips}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Navigate CTA */}
+        {temple.location?.googleMapLink && (
+          <div className="mt-5 pt-4" style={{ borderTop: "1px solid rgba(234,88,12,0.1)" }}>
+            <a href={temple.location.googleMapLink} target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95"
+              style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", boxShadow: "0 4px 14px rgba(234,88,12,0.3)" }}>
+              <MapPin size={16} /> Get Directions 🔱
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </article>
+);
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
+function Temples() {
+  const [temples, setTemples] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [expandedSections, setExpandedSections] = useState({});
+
+  useEffect(() => {
+    const fetchTemples = async () => {
+      try {
+        const token = localStorage.getItem("mahakalToken");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/mandir/getall`, {
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error("Failed to fetch temples");
+        const data = await res.json();
+        setTemples(data.temples || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTemples();
+  }, []);
+
+  const toggleSection = (templeId, section) =>
+    setExpandedSections((prev) => ({ ...prev, [`${templeId}-${section}`]: !prev[`${templeId}-${section}`] }));
+
+  if (loading) return <DharmicLoader />;
+
+  if (error) return (
+    <div className="min-h-screen flex items-center justify-center p-4"
+      style={{ background: "linear-gradient(160deg,#fff7ed,#fef3c7,#fee2e2)" }}>
+      <div className="text-center max-w-sm">
+        <div className="text-5xl mb-4">😔</div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h3>
+        <p className="text-red-500 text-sm mb-6">{error}</p>
+        <button onClick={() => window.location.reload()}
+          className="px-6 py-3 rounded-xl text-white font-bold text-sm"
+          style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)" }}>
+          Try Again
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen" style={{ background: "linear-gradient(160deg,#fff7ed 0%,#ffffff 50%,#fff7ed 100%)" }}>
+
+      {/* Top stripe */}
+      <div className="h-1 w-full bg-gradient-to-r from-orange-400 via-red-400 to-orange-500 opacity-80" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-8">
+
+        {/* ── Page Header ── */}
+        <div className="text-center py-8 px-6 rounded-3xl"
+          style={{
+            background: "rgba(255,255,255,0.85)",
+            border: "1px solid rgba(234,88,12,0.14)",
+            boxShadow: "0 4px 32px rgba(234,88,12,0.07)",
+          }}>
+          {/* Eyebrow */}
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-gradient-to-r from-transparent to-orange-400" />
+            <p className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em]">🕉️ Ujjain · Prashad Guide 🙏</p>
+            <div className="h-px w-12 bg-gradient-to-l from-transparent to-orange-400" />
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
+            Sacred Temples of{" "}
+            <span style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              Ujjain
+            </span>
+          </h1>
+
+          <p className="max-w-2xl mx-auto text-sm sm:text-base text-gray-500 leading-relaxed mb-6">
+            Explore the divine temples, their sacred history, puja rituals, and visiting guidance. Plan your spiritual journey with complete devotion.
+          </p>
+
+          {/* Stats */}
+          <div className="inline-flex items-center gap-6 sm:gap-10 px-6 py-3 rounded-2xl"
+            style={{ background: "linear-gradient(135deg,#fff7ed,#fee2e2)", border: "1px solid rgba(234,88,12,0.18)" }}>
+            {[
+              { value: `${temples.length}+`, label: "Temples" },
+              { sep: true },
+              { value: "24/7", label: "Darshan" },
+              { sep: true },
+              { value: "100+", label: "Prasad" },
+            ].map((s, i) =>
+              s.sep
+                ? <div key={i} className="w-px h-8 bg-orange-200" />
+                : <div key={i} className="text-center">
+                    <p className="text-xl sm:text-2xl font-black text-orange-600">{s.value}</p>
+                    <p className="text-[10px] sm:text-xs text-gray-500 font-medium uppercase tracking-wide">{s.label}</p>
+                  </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── Temple Cards ── */}
+        <div className="space-y-6 sm:space-y-8">
+          {temples.map((temple) => (
+            <TempleCard
+              key={temple._id}
+              temple={temple}
+              expandedSections={expandedSections}
+              toggleSection={toggleSection}
+            />
+          ))}
+
+          {temples.length === 0 && (
+            <div className="text-center py-16 rounded-3xl"
+              style={{ background: "rgba(255,255,255,0.85)", border: "1px solid rgba(234,88,12,0.14)" }}>
+              <div className="text-5xl mb-4">🏛️</div>
+              <p className="text-gray-500">No temples found at the moment.</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Footer note ── */}
+        <div className="text-center py-5 rounded-2xl"
+          style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(234,88,12,0.1)" }}>
+          <p className="text-sm text-orange-600 font-semibold">
+            🕉️ May your spiritual journey be blessed · हर हर महादेव 🙏
+          </p>
+        </div>
+
+        {/* Bottom stripe */}
+        <div className="h-1 rounded-full bg-gradient-to-r from-orange-400 via-red-400 to-orange-500 opacity-30" />
+      </div>
+    </div>
+  );
+}
 
 export default Temples;
