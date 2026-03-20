@@ -407,6 +407,8 @@ function Profile() {
                       key={order._id}
                       className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:border-orange-300 transition"
                     >
+
+                      
                       <div className="p-5">
                         <div className="flex justify-between mb-4">
                           <div className={`px-3 py-1 rounded-full text-xs font-medium ${paymentStatus.bg} ${paymentStatus.text} flex items-center gap-1`}>
@@ -458,6 +460,8 @@ function Profile() {
                           View Details
                         </button>
                       </div>
+
+
                     </div>
                   );
                 })

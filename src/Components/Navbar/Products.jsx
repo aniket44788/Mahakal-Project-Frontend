@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, ShoppingCart, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLoader } from "../../../utils/LoaderContext";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { showLoader, hideLoader } = useLoader();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -34,11 +35,14 @@ function Products() {
     "Custom Tabeez",
   ];
 
-  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
+
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/products/all`);
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/products/all`,
+        );
+
         if (res.data.success) {
           setProducts(res.data.products);
           setFilteredProducts(res.data.products);
@@ -46,7 +50,6 @@ function Products() {
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
-        setLoading(false);
       }
     };
 
@@ -61,30 +64,28 @@ function Products() {
       temp = temp.filter(
         (item) =>
           item.category &&
-          item.category.toLowerCase() === selectedCategory.toLowerCase()
+          item.category.toLowerCase() === selectedCategory.toLowerCase(),
       );
     }
 
     if (search.trim() !== "") {
-      temp = temp.filter((item) =>
-        (item.name && item.name.toLowerCase().includes(search.toLowerCase())) ||
-        (item.description && item.description.toLowerCase().includes(search.toLowerCase())) ||
-        (item.category && item.category.toLowerCase().includes(search.toLowerCase())) ||
-        (item.material && item.material.toLowerCase().includes(search.toLowerCase())) ||
-        (item.occasion && item.occasion.toLowerCase().includes(search.toLowerCase()))
+      temp = temp.filter(
+        (item) =>
+          (item.name &&
+            item.name.toLowerCase().includes(search.toLowerCase())) ||
+          (item.description &&
+            item.description.toLowerCase().includes(search.toLowerCase())) ||
+          (item.category &&
+            item.category.toLowerCase().includes(search.toLowerCase())) ||
+          (item.material &&
+            item.material.toLowerCase().includes(search.toLowerCase())) ||
+          (item.occasion &&
+            item.occasion.toLowerCase().includes(search.toLowerCase())),
       );
     }
 
     setFilteredProducts(temp);
   }, [search, selectedCategory, products]);
-
-  if (loading) {
-    return (
-      <div className="pt-28 text-center text-lg font-semibold text-gray-600 animate-pulse">
-        Loading products...
-      </div>
-    );
-  }
 
   return (
     <div className="pt-2 px-6">
@@ -128,16 +129,16 @@ function Products() {
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
             </svg>
           </div>
         </div>
-
-
       </div>
-
-
-
 
       {filteredProducts.length === 0 ? (
         <p className="text-center text-gray-600">No products found.</p>
@@ -153,8 +154,9 @@ function Products() {
               {item.discountPrice && (
                 <span className="absolute top-2 left-2 z-10 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
                   {Math.round(
-                    ((item.price - item.discountPrice) / item.price) * 100
-                  )}% OFF
+                    ((item.price - item.discountPrice) / item.price) * 100,
+                  )}
+                  % OFF
                 </span>
               )}
 
@@ -191,11 +193,12 @@ function Products() {
                       <span className="text-orange-600 font-bold text-xl">
                         ₹{item.discountPrice || item.price}
                       </span>
-                      {item.discountPrice && item.discountPrice < item.price && (
-                        <span className="line-through text-gray-500 text-sm">
-                          ₹{item.price}
-                        </span>
-                      )}
+                      {item.discountPrice &&
+                        item.discountPrice < item.price && (
+                          <span className="line-through text-gray-500 text-sm">
+                            ₹{item.price}
+                          </span>
+                        )}
                     </>
                   ) : (
                     <span className="text-red-600 font-bold text-xl">
@@ -210,7 +213,11 @@ function Products() {
                     <Star
                       key={i}
                       size={16}
-                      className={i < Math.floor(item.rating?.average || 0) ? "fill-yellow-500" : ""}
+                      className={
+                        i < Math.floor(item.rating?.average || 0)
+                          ? "fill-yellow-500"
+                          : ""
+                      }
                     />
                   ))}
                   <span className="ml-2 text-xs text-gray-500">
@@ -236,9 +243,6 @@ function Products() {
           ))}
         </div>
       )}
-
-
-
     </div>
   );
 }
