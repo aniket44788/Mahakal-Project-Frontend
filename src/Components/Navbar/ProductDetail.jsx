@@ -411,7 +411,7 @@ function ProductDetails() {
                     <>
                       <span className="text-xl text-gray-400 line-through font-bold">₹{product.price}</span>
                       <span className="text-sm font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">
-                        Save ₹{product.price - product.discountPrice}
+                      Save ₹{(product.price - product.discountPrice).toFixed(2)}
                       </span>
                     </>
                   )}

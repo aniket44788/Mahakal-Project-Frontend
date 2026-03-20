@@ -583,11 +583,6 @@
 
 // export default Products;
 
-
-
-
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Star, ShoppingCart, Search } from "lucide-react";
@@ -610,23 +605,48 @@ const DharmicLoader = ({ visible }) => {
   }, [visible]);
   if (!visible) return null;
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
-      style={{ background: "linear-gradient(135deg,rgba(255,237,213,0.93),rgba(254,215,170,0.89),rgba(252,165,165,0.86))", backdropFilter: "blur(16px)" }}>
+    <div
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+      style={{
+        background:
+          "linear-gradient(135deg,rgba(255,237,213,0.93),rgba(254,215,170,0.89),rgba(252,165,165,0.86))",
+        backdropFilter: "blur(16px)",
+      }}
+    >
       <div className="relative flex items-center justify-center mb-8">
-        <div className="w-28 h-28 rounded-full border-4 border-orange-200 border-t-orange-500 border-r-orange-400"
-          style={{ animation: "spin 1.2s linear infinite" }} />
-        <div className="absolute w-20 h-20 rounded-full border-2 border-red-300 border-b-red-500"
-          style={{ animation: "spinReverse 1.8s linear infinite" }} />
-        <div className="absolute text-4xl" style={{ animation: "pulse 2s ease-in-out infinite" }}>🕉️</div>
+        <div
+          className="w-28 h-28 rounded-full border-4 border-orange-200 border-t-orange-500 border-r-orange-400"
+          style={{ animation: "spin 1.2s linear infinite" }}
+        />
+        <div
+          className="absolute w-20 h-20 rounded-full border-2 border-red-300 border-b-red-500"
+          style={{ animation: "spinReverse 1.8s linear infinite" }}
+        />
+        <div
+          className="absolute text-4xl"
+          style={{ animation: "pulse 2s ease-in-out infinite" }}
+        >
+          🕉️
+        </div>
       </div>
       <div className="flex gap-2 mb-6">
-        {[0,1,2,3,4].map((n) => (
-          <div key={n} className="w-2 h-2 rounded-full bg-orange-500"
-            style={{ animation: `bounce 1.2s ease-in-out ${n*0.15}s infinite` }} />
+        {[0, 1, 2, 3, 4].map((n) => (
+          <div
+            key={n}
+            className="w-2 h-2 rounded-full bg-orange-500"
+            style={{
+              animation: `bounce 1.2s ease-in-out ${n * 0.15}s infinite`,
+            }}
+          />
         ))}
       </div>
-      <p key={i} className="text-orange-800 font-semibold text-lg text-center px-6"
-        style={{ animation: "fadeIn 0.5s ease-in" }}>{msgs[i]}</p>
+      <p
+        key={i}
+        className="text-orange-800 font-semibold text-lg text-center px-6"
+        style={{ animation: "fadeIn 0.5s ease-in" }}
+      >
+        {msgs[i]}
+      </p>
       <p className="text-orange-600 text-sm mt-2 opacity-70">हर हर महादेव 🔱</p>
       <style>{`
         @keyframes spin{to{transform:rotate(360deg)}}
@@ -658,7 +678,10 @@ const ProductCard = ({ item, onAddToCart }) => {
       onClick={() => navigate(`/single/${item._id}`)}
     >
       {/* Image */}
-      <div className="relative overflow-hidden" style={{ background: "linear-gradient(135deg,#fff7ed,#fef9f5)" }}>
+      <div
+        className="relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg,#fff7ed,#fef9f5)" }}
+      >
         <img
           src={item.images?.[0]?.url || "/shivmahakal.png"}
           alt={item.name}
@@ -669,22 +692,18 @@ const ProductCard = ({ item, onAddToCart }) => {
 
         {/* Discount badge */}
         {discount > 0 && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 rounded-xl text-white text-[10px] font-black"
-            style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", boxShadow: "0 2px 8px rgba(234,88,12,0.4)" }
-            
-            }>
+          <div
+            className="absolute top-3 left-3 px-2.5 py-1 rounded-xl text-white text-[10px] font-black"
+            style={{
+              background: "linear-gradient(135deg,#ea580c,#dc2626)",
+              boxShadow: "0 2px 8px rgba(234,88,12,0.4)",
+            }}
+          >
             🔥 {discount}% OFF
           </div>
         )}
 
-        {/* Sold out overlay */}
-        {!item.isAvailable && (
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center">
-            <span className="bg-red-100 text-red-600 font-black text-sm px-4 py-2 rounded-xl border border-red-200">
-              SOLD OUT
-            </span>
-          </div>
-        )}
+        
       </div>
 
       {/* Content */}
@@ -697,10 +716,14 @@ const ProductCard = ({ item, onAddToCart }) => {
         )}
 
         {/* Name */}
-        <h3 className="font-bold text-gray-900 text-sm leading-snug truncate mb-1">{item.name}</h3>
+        <h3 className="font-bold text-gray-900 text-sm leading-snug truncate mb-1">
+          {item.name}
+        </h3>
 
         {/* Description */}
-        <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed flex-1 mb-2">{item.description}</p>
+        <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed flex-1 mb-2">
+          {item.description}
+        </p>
 
         {/* Meta row */}
         {(item.size || item.deity) && (
@@ -712,21 +735,34 @@ const ProductCard = ({ item, onAddToCart }) => {
         {/* Rating */}
         <div className="flex items-center gap-1.5 mb-3">
           <div className="flex">
-            {[1,2,3,4,5].map((s) => (
-              <Star key={s} size={12}
-                className={s <= Math.floor(item.rating?.average || 0) ? "fill-yellow-400 stroke-yellow-400" : "stroke-gray-300"} />
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star
+                key={s}
+                size={12}
+                className={
+                  s <= Math.floor(item.rating?.average || 0)
+                    ? "fill-yellow-400 stroke-yellow-400"
+                    : "stroke-gray-300"
+                }
+              />
             ))}
           </div>
-          <span className="text-[10px] text-gray-400">({item.rating?.count || 0})</span>
+          <span className="text-[10px] text-gray-400">
+            ({item.rating?.count || 0})
+          </span>
         </div>
 
         {/* Price */}
         <div className="flex items-baseline gap-2 mb-4">
           {item.isAvailable ? (
             <>
-              <span className="text-xl font-black text-orange-600">₹{finalPrice}</span>
+              <span className="text-xl font-black text-orange-600">
+                ₹{finalPrice}
+              </span>
               {item.discountPrice && (
-                <span className="text-xs text-gray-400 line-through font-medium">₹{item.price}</span>
+                <span className="text-xs text-gray-400 line-through font-medium">
+                  ₹{item.price}
+                </span>
               )}
             </>
           ) : (
@@ -735,19 +771,35 @@ const ProductCard = ({ item, onAddToCart }) => {
         </div>
 
         {/* Buttons */}
-        <div className="grid grid-cols-2 gap-2 mt-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="grid grid-cols-2 gap-2 mt-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
-            onClick={(e) => { e.stopPropagation(); onAddToCart(item._id); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(item._id);
+            }}
             disabled={!item.isAvailable}
             className="h-10 rounded-xl flex items-center justify-center gap-1.5 text-xs font-bold border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ShoppingCart size={13} /> Cart
           </button>
           <button
-            onClick={(e) => { e.stopPropagation(); navigate(`/single/${item._id}`); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/single/${item._id}`);
+            }}
             disabled={!item.isAvailable}
             className="h-10 rounded-xl text-xs font-black text-white transition-all duration-200 hover:scale-[1.03] disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{ background: item.isAvailable ? "linear-gradient(135deg,#ea580c,#dc2626)" : "#9ca3af", boxShadow: item.isAvailable ? "0 3px 10px rgba(234,88,12,0.3)" : "none" }}
+            style={{
+              background: item.isAvailable
+                ? "linear-gradient(135deg,#ea580c,#dc2626)"
+                : "#9ca3af",
+              boxShadow: item.isAvailable
+                ? "0 3px 10px rgba(234,88,12,0.3)"
+                : "none",
+            }}
           >
             Buy Now
           </button>
@@ -767,17 +819,33 @@ function Products() {
   const navigate = useNavigate();
 
   const categories = [
-    "All", "Prasad", "Pooja Samagri", "Rudraksha & Malas",
-    "Dhup / Shankh", "Tulsi Mala", "Chandan", "Tabeez", "Books",
-    "Mantra Books", "God Idols & Frames", "Kanwar Yatra Samagri",
-    "Sindoor", "Roli", "Haldi", "Akshat (Chawal)", "Festival Kits",
-    "Digital Items (Aarti / Video / Pen drive)", "Custom Tabeez",
+    "All",
+    "Prasad",
+    "Pooja Samagri",
+    "Rudraksha & Malas",
+    "Dhup / Shankh",
+    "Tulsi Mala",
+    "Chandan",
+    "Tabeez",
+    "Books",
+    "Mantra Books",
+    "God Idols & Frames",
+    "Kanwar Yatra Samagri",
+    "Sindoor",
+    "Roli",
+    "Haldi",
+    "Akshat (Chawal)",
+    "Festival Kits",
+    "Digital Items (Aarti / Video / Pen drive)",
+    "Custom Tabeez",
   ];
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/products/all`);
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/products/all`,
+        );
         if (res.data.success) {
           setProducts(res.data.products);
           setFilteredProducts(res.data.products);
@@ -794,48 +862,70 @@ function Products() {
   useEffect(() => {
     let temp = products;
     if (selectedCategory !== "All")
-      temp = temp.filter((p) => p.category?.toLowerCase() === selectedCategory.toLowerCase());
+      temp = temp.filter(
+        (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase(),
+      );
     if (search.trim())
       temp = temp.filter((p) =>
-        [p.name, p.description, p.category, p.material, p.occasion]
-          .some((f) => f?.toLowerCase().includes(search.toLowerCase()))
+        [p.name, p.description, p.category, p.material, p.occasion].some((f) =>
+          f?.toLowerCase().includes(search.toLowerCase()),
+        ),
       );
     setFilteredProducts(temp);
   }, [search, selectedCategory, products]);
 
   const handleAddToCart = async (productId) => {
     const token = localStorage.getItem("mahakalToken");
-    if (!token) { toastWarning("Please login to add items to cart"); navigate("/login"); return; }
+    if (!token) {
+      toastWarning("Please login to add items to cart");
+      navigate("/login");
+      return;
+    }
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/cart/add`,
         { productId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       if (res.data.success) toastSuccess("Item added to cart!");
       else toastWarning(res.data.message || "Failed to add item");
-    } catch { toastError("Something went wrong!"); }
+    } catch {
+      toastError("Something went wrong!");
+    }
   };
 
   return (
     <>
       <DharmicLoader visible={loading} />
 
-      <div className="min-h-screen" style={{ background: "linear-gradient(160deg,#fff7ed 0%,#ffffff 50%,#fff7ed 100%)" }}>
-     
+      <div
+        className="min-h-screen"
+        style={{
+          background:
+            "linear-gradient(160deg,#fff7ed 0%,#ffffff 50%,#fff7ed 100%)",
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-
           {/* ── Page Header ── */}
           <div className="text-center mb-8">
-            <p className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-2">🕉️ Mahakal Bazar · Divine Store</p>
+            <p className="text-xs font-bold text-orange-500 uppercase tracking-[0.2em] mb-2">
+              🕉️ Mahakal Bazar · Divine Store
+            </p>
             <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-2">
               Prasad &{" "}
-              <span style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span
+                style={{
+                  background: "linear-gradient(135deg,#ea580c,#dc2626)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 Sacred Products
               </span>
             </h1>
             <p className="text-sm text-gray-400">
-              {filteredProducts.length} divine item{filteredProducts.length !== 1 ? "s" : ""} available
+              {filteredProducts.length} divine item
+              {filteredProducts.length !== 1 ? "s" : ""} available
             </p>
           </div>
 
@@ -843,14 +933,20 @@ function Products() {
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
             {/* Search */}
             <div className="relative flex-1">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search
+                size={16}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+              />
               <input
                 type="text"
                 placeholder="Search products, categories, materials..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-2xl text-sm text-gray-800 placeholder-gray-400 outline-none transition-all focus:ring-2 focus:ring-orange-300"
-                style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(234,88,12,0.18)" }}
+                style={{
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(234,88,12,0.18)",
+                }}
               />
             </div>
 
@@ -860,15 +956,30 @@ function Products() {
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="w-full appearance-none py-3 pl-4 pr-10 rounded-2xl text-sm font-semibold text-gray-700 outline-none transition-all focus:ring-2 focus:ring-orange-300 cursor-pointer"
-                style={{ background: "rgba(255,255,255,0.9)", border: "1px solid rgba(234,88,12,0.18)" }}
+                style={{
+                  background: "rgba(255,255,255,0.9)",
+                  border: "1px solid rgba(234,88,12,0.18)",
+                }}
               >
                 {categories.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-orange-400">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </div>
@@ -878,16 +989,26 @@ function Products() {
           {(selectedCategory !== "All" || search) && (
             <div className="flex flex-wrap gap-2 mb-5">
               {selectedCategory !== "All" && (
-                <button onClick={() => setSelectedCategory("All")}
+                <button
+                  onClick={() => setSelectedCategory("All")}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-orange-700 transition hover:bg-orange-100"
-                  style={{ background: "rgba(255,247,237,0.9)", border: "1px solid rgba(234,88,12,0.25)" }}>
+                  style={{
+                    background: "rgba(255,247,237,0.9)",
+                    border: "1px solid rgba(234,88,12,0.25)",
+                  }}
+                >
                   {selectedCategory} ✕
                 </button>
               )}
               {search && (
-                <button onClick={() => setSearch("")}
+                <button
+                  onClick={() => setSearch("")}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-orange-700 transition hover:bg-orange-100"
-                  style={{ background: "rgba(255,247,237,0.9)", border: "1px solid rgba(234,88,12,0.25)" }}>
+                  style={{
+                    background: "rgba(255,247,237,0.9)",
+                    border: "1px solid rgba(234,88,12,0.25)",
+                  }}
+                >
                   "{search}" ✕
                 </button>
               )}
@@ -896,21 +1017,39 @@ function Products() {
 
           {/* ── Grid ── */}
           {!loading && filteredProducts.length === 0 ? (
-            <div className="text-center py-20 rounded-3xl"
-              style={{ background: "rgba(255,255,255,0.85)", border: "1px solid rgba(234,88,12,0.12)" }}>
+            <div
+              className="text-center py-20 rounded-3xl"
+              style={{
+                background: "rgba(255,255,255,0.85)",
+                border: "1px solid rgba(234,88,12,0.12)",
+              }}
+            >
               <div className="text-5xl mb-4">🔍</div>
               <p className="font-bold text-gray-700 mb-1">No products found</p>
-              <p className="text-sm text-gray-400">Try a different search or category</p>
-              <button onClick={() => { setSearch(""); setSelectedCategory("All"); }}
+              <p className="text-sm text-gray-400">
+                Try a different search or category
+              </p>
+              <button
+                onClick={() => {
+                  setSearch("");
+                  setSelectedCategory("All");
+                }}
                 className="mt-5 px-6 py-2.5 rounded-xl text-white text-sm font-bold"
-                style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)" }}>
+                style={{
+                  background: "linear-gradient(135deg,#ea580c,#dc2626)",
+                }}
+              >
                 Clear Filters
               </button>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
               {filteredProducts.map((item) => (
-                <ProductCard key={item._id} item={item} onAddToCart={handleAddToCart} />
+                <ProductCard
+                  key={item._id}
+                  item={item}
+                  onAddToCart={handleAddToCart}
+                />
               ))}
             </div>
           )}

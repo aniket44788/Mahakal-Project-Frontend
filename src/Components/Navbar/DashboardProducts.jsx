@@ -197,6 +197,7 @@ const ProductModal = ({ product, onClose, onBuy }) => {
                       <span className="text-lg text-gray-400 line-through">₹{product.templePrasadPrice}</span>
                       <span className="text-xs font-black text-green-600 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">
                         Save ₹{product.templePrasadPrice - product.templePrasadDiscountPrice}
+                        
                       </span>
                     </>
                   )}
