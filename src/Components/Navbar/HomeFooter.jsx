@@ -46,14 +46,14 @@ export default function HomeFooter() {
 
   return (
     <footer
-      className="relative overflow-hidden mt-16"
+      className="relative overflow-hidden "
       style={{
         background: "linear-gradient(160deg,#fff7ed 0%,#ffffff 50%,#fff7ed 100%)",
         borderTop: "1px solid rgba(234,88,12,0.12)",
       }}
     >
       {/* Decorative top border */}
-      <div className="h-1 w-full bg-gradient-to-r from-orange-400 via-red-400 to-orange-500 opacity-80" />
+     
 
       {/* Subtle pattern overlay */}
       <div
