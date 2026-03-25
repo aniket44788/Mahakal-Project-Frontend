@@ -4,6 +4,9 @@ import {
   Home, Gift, Landmark, Library, Phone,
   User as UserIcon, Menu, X, LogOut,
   ShoppingCart, Mail, Lock, ChevronRight,
+  AlignHorizontalDistributeCenter,
+  LucideAlignHorizontalDistributeEnd,
+  ExternalLink,
 } from "lucide-react";
 
 function Navbar() {
@@ -118,6 +121,7 @@ function Navbar() {
     { to: "/products", icon: <Gift size={20} />, label: "Products" },
     { to: "/temples", icon: <Landmark size={20} />, label: "Temples" },
     { to: "/donation", icon: <Library size={20} />, label: "Donation" },
+    { to: "/about", icon: <ExternalLink size={20} />, label: "About" },
   ];
 
   return (

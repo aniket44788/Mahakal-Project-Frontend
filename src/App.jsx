@@ -27,6 +27,7 @@ import ShippingPolicy from "./Components/Policy/ShippingPolicy";
 import ContactUs from "./Components/Policy/ContactUs";
 import RouteLoaderHandler from "../utils/RouteLoaderHandler";
 import OrderSuccess from "../utils/OrderSuccess";
+import About from "./Components/Navbar/About";
 // import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
 
 function App() {
@@ -48,6 +49,10 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/temples" element={<Temples />} />
           <Route path="/donation" element={<Donation />} />
+          <Route path="/about" element={<About />} />
+
+
+
           <Route path="/single/:id" element={<ProductDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/order/:orderId" element={<OrderDetails />} />
