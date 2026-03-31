@@ -1,13 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Home, Gift, Landmark, Library, Phone,
-  User as UserIcon, Menu, X, LogOut,
-  ShoppingCart, Mail, Lock, ChevronRight,
+  Home,
+  Gift,
+  Landmark,
+  Library,
+  Phone,
+  User as UserIcon,
+  Menu,
+  X,
+  LogOut,
+  ShoppingCart,
+  Mail,
+  Lock,
+  ChevronRight,
   AlignHorizontalDistributeCenter,
   LucideAlignHorizontalDistributeEnd,
   ExternalLink,
 } from "lucide-react";
+import { FaBlog } from "react-icons/fa";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,8 +38,14 @@ function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleProfile = () => setShowProfile((prev) => !prev);
-  const goToProfile = () => { setShowProfile(false); navigate("/profile"); };
-  const goToCart = () => { setIsOpen(false); navigate("/cart"); };
+  const goToProfile = () => {
+    setShowProfile(false);
+    navigate("/profile");
+  };
+  const goToCart = () => {
+    setIsOpen(false);
+    navigate("/cart");
+  };
 
   useEffect(() => {
     const savedUser = localStorage.getItem("mahakalUser");
@@ -42,18 +59,25 @@ function Navbar() {
       if (!token || !user) return;
       try {
         const res = await fetch(`${API_URL}/cart/get`, {
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         });
         const data = await res.json();
-        if (data.success) setCartCount(data.cartCount || data.cart?.length || 0);
-      } catch (err) { console.error("Error fetching cart:", err); }
+        if (data.success)
+          setCartCount(data.cartCount || data.cart?.length || 0);
+      } catch (err) {
+        console.error("Error fetching cart:", err);
+      }
     };
     if (user) fetchCartCount();
   }, [user, API_URL]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (profileRef.current && !profileRef.current.contains(e.target)) setShowProfile(false);
+      if (profileRef.current && !profileRef.current.contains(e.target))
+        setShowProfile(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -62,13 +86,20 @@ function Navbar() {
   // Lock body scroll when mobile drawer is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (!email || !email.includes("@")) { setError("Please enter a valid email"); return; }
-    setLoading(true); setError(""); setMessage("");
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setMessage("");
     try {
       const res = await fetch(`${API_URL}/user/register`, {
         method: "POST",
@@ -76,16 +107,26 @@ function Navbar() {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (data.success || res.ok) { setMessage("OTP sent to your email!"); setAuthStep("otp"); }
-      else setError(data.message || "Failed to send OTP");
-    } catch (err) { setError("Network error. Please try again."); }
-    finally { setLoading(false); }
+      if (data.success || res.ok) {
+        setMessage("OTP sent to your email!");
+        setAuthStep("otp");
+      } else setError(data.message || "Failed to send OTP");
+    } catch (err) {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
-    if (!otp || otp.length !== 6) { setError("Please enter the 6-digit OTP"); return; }
-    setLoading(true); setError(""); setMessage("");
+    if (!otp || otp.length !== 6) {
+      setError("Please enter the 6-digit OTP");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setMessage("");
     try {
       const res = await fetch(`${API_URL}/user/verifyOtp`, {
         method: "POST",
@@ -97,23 +138,36 @@ function Navbar() {
         setUser(data.user);
         localStorage.setItem("mahakalUser", JSON.stringify(data.user));
         localStorage.setItem("mahakalToken", data.token);
-        setShowAuthModal(false); setAuthStep("email");
-        setEmail(""); setOtp(""); setMessage("Logged in successfully!");
+        setShowAuthModal(false);
+        setAuthStep("email");
+        setEmail("");
+        setOtp("");
+        setMessage("Logged in successfully!");
       } else setError(data.message || "Invalid OTP");
-    } catch (err) { setError("Verification failed. Try again."); }
-    finally { setLoading(false); }
+    } catch (err) {
+      setError("Verification failed. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
-    setUser(null); setCartCount(0);
+    setUser(null);
+    setCartCount(0);
     localStorage.removeItem("mahakalUser");
     localStorage.removeItem("mahakalToken");
-    setShowProfile(false); setShowAuthModal(false); setIsOpen(false);
+    setShowProfile(false);
+    setShowAuthModal(false);
+    setIsOpen(false);
   };
 
   const closeModal = () => {
-    setShowAuthModal(false); setAuthStep("email");
-    setEmail(""); setOtp(""); setError(""); setMessage("");
+    setShowAuthModal(false);
+    setAuthStep("email");
+    setEmail("");
+    setOtp("");
+    setError("");
+    setMessage("");
   };
 
   const navLinks = [
@@ -122,6 +176,7 @@ function Navbar() {
     { to: "/temples", icon: <Landmark size={20} />, label: "Temples" },
     { to: "/donation", icon: <Library size={20} />, label: "Donation" },
     { to: "/about", icon: <ExternalLink size={20} />, label: "About" },
+    { to: "/blogs", icon: <FaBlog size={20} />, label: "Blogs" },
   ];
 
   return (
@@ -129,11 +184,16 @@ function Navbar() {
       {/* ── Navbar ── */}
       <nav className="bg-white shadow-md fixed w-full top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <img src="/shivmahakal.png" alt="Logo" className="w-9 h-9 rounded-full object-cover ring-2 ring-orange-200" />
-            <span className="text-lg font-bold text-orange-600 tracking-tight">Mahakal Bazaar</span>
+            <img
+              src="/shivmahakal.png"
+              alt="Logo"
+              className="w-9 h-9 rounded-full object-cover ring-2 ring-orange-200"
+            />
+            <span className="text-lg font-bold text-orange-600 tracking-tight">
+              Mahakal Bazaar
+            </span>
           </Link>
 
           {/* Desktop links */}
@@ -150,9 +210,15 @@ function Navbar() {
           </ul>
 
           {/* Desktop actions */}
-          <div className="hidden md:flex items-center gap-3 relative" ref={profileRef}>
+          <div
+            className="hidden md:flex items-center gap-3 relative"
+            ref={profileRef}
+          >
             {/* Cart */}
-            <button onClick={goToCart} className="relative p-2 hover:bg-orange-50 rounded-xl transition">
+            <button
+              onClick={goToCart}
+              className="relative p-2 hover:bg-orange-50 rounded-xl transition"
+            >
               <ShoppingCart className="text-orange-600 w-5 h-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -176,7 +242,9 @@ function Navbar() {
                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-orange-400 to-red-400 flex items-center justify-center text-white text-xs font-bold">
                   {user.name?.[0]?.toUpperCase() || "U"}
                 </div>
-                <span className="text-sm font-semibold text-gray-700">{user.name?.split(" ")[0]}</span>
+                <span className="text-sm font-semibold text-gray-700">
+                  {user.name?.split(" ")[0]}
+                </span>
               </button>
             )}
 
@@ -190,8 +258,12 @@ function Navbar() {
                       {user.name?.[0]?.toUpperCase() || "U"}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-gray-900 truncate">{user.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      <p className="font-bold text-gray-900 truncate">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {user.email}
+                      </p>
                       <span className="inline-block mt-1 text-[10px] font-semibold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
                         🔱 Devotee
                       </span>
@@ -205,21 +277,31 @@ function Navbar() {
                     className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-orange-50 transition group"
                   >
                     <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                      <UserIcon size={16} className="text-orange-500" /> My Profile
+                      <UserIcon size={16} className="text-orange-500" /> My
+                      Profile
                     </span>
-                    <ChevronRight size={14} className="text-gray-400 group-hover:text-orange-400 transition" />
+                    <ChevronRight
+                      size={14}
+                      className="text-gray-400 group-hover:text-orange-400 transition"
+                    />
                   </button>
                   <button
                     onClick={goToCart}
                     className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-orange-50 transition group"
                   >
                     <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
-                      <ShoppingCart size={16} className="text-orange-500" /> My Cart
+                      <ShoppingCart size={16} className="text-orange-500" /> My
+                      Cart
                       {cartCount > 0 && (
-                        <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">{cartCount}</span>
+                        <span className="bg-red-100 text-red-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                          {cartCount}
+                        </span>
                       )}
                     </span>
-                    <ChevronRight size={14} className="text-gray-400 group-hover:text-orange-400 transition" />
+                    <ChevronRight
+                      size={14}
+                      className="text-gray-400 group-hover:text-orange-400 transition"
+                    />
                   </button>
                 </div>
 
@@ -237,7 +319,10 @@ function Navbar() {
 
           {/* Mobile right side */}
           <div className="flex md:hidden items-center gap-2">
-            <button onClick={goToCart} className="relative p-2 hover:bg-orange-50 rounded-xl transition">
+            <button
+              onClick={goToCart}
+              className="relative p-2 hover:bg-orange-50 rounded-xl transition"
+            >
               <ShoppingCart className="text-orange-600 w-5 h-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
@@ -245,7 +330,10 @@ function Navbar() {
                 </span>
               )}
             </button>
-            <button onClick={toggleMenu} className="p-2 rounded-xl hover:bg-orange-50 transition text-gray-700">
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-xl hover:bg-orange-50 transition text-gray-700"
+            >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
           </div>
@@ -269,24 +357,31 @@ function Navbar() {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{
-          background: "linear-gradient(160deg, #fff7ed 0%, #fef3c7 50%, #fee2e2 100%)",
+          background:
+            "linear-gradient(160deg, #fff7ed 0%, #fef3c7 50%, #fee2e2 100%)",
           boxShadow: "-8px 0 40px rgba(0,0,0,0.15)",
         }}
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-orange-100">
           <div className="flex items-center gap-2">
-            <img src="/shivmahakal.png" alt="Logo" className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-200" />
+            <img
+              src="/shivmahakal.png"
+              alt="Logo"
+              className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-200"
+            />
             <span className="font-bold text-orange-600">Mahakal Bazaar</span>
           </div>
-          <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-lg hover:bg-orange-100 text-gray-600 transition">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-orange-100 text-gray-600 transition"
+          >
             <X size={20} />
           </button>
         </div>
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-
           {/* User card (if logged in) */}
           {user ? (
             <div
@@ -302,7 +397,9 @@ function Navbar() {
                   {user.name?.[0]?.toUpperCase() || "U"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-gray-900 truncate">{user.name}</p>
+                  <p className="font-bold text-gray-900 truncate">
+                    {user.name}
+                  </p>
                   <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   <span className="inline-block mt-1 text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
                     🔱 Devotee
@@ -310,7 +407,10 @@ function Navbar() {
                 </div>
               </div>
               <button
-                onClick={() => { goToProfile(); setIsOpen(false); }}
+                onClick={() => {
+                  goToProfile();
+                  setIsOpen(false);
+                }}
                 className="mt-3 w-full py-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold flex items-center justify-center gap-2 shadow-md"
               >
                 <UserIcon size={15} /> View My Profile
@@ -318,7 +418,10 @@ function Navbar() {
             </div>
           ) : (
             <button
-              onClick={() => { setShowAuthModal(true); setIsOpen(false); }}
+              onClick={() => {
+                setShowAuthModal(true);
+                setIsOpen(false);
+              }}
               className="w-full py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-200"
             >
               <Mail size={16} /> Sign In to your account
@@ -328,7 +431,10 @@ function Navbar() {
           {/* Nav links */}
           <div
             className="rounded-2xl overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(234,88,12,0.12)" }}
+            style={{
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(234,88,12,0.12)",
+            }}
           >
             {navLinks.map((link, i) => (
               <Link
@@ -352,7 +458,10 @@ function Navbar() {
           <button
             onClick={goToCart}
             className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition hover:bg-orange-100"
-            style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(234,88,12,0.12)" }}
+            style={{
+              background: "rgba(255,255,255,0.7)",
+              border: "1px solid rgba(234,88,12,0.12)",
+            }}
           >
             <span className="flex items-center gap-3 text-gray-700 font-medium text-sm">
               <ShoppingCart size={20} className="text-orange-500" />
@@ -367,7 +476,6 @@ function Navbar() {
               <ChevronRight size={16} className="text-gray-300" />
             </div>
           </button>
-
         </div>
 
         {/* ── Bottom: Logout pinned ── */}
@@ -379,39 +487,61 @@ function Navbar() {
             >
               <LogOut size={17} /> Sign Out
             </button>
-            <p className="text-center text-xs text-orange-400 mt-3">हर हर महादेव 🔱</p>
+            <p className="text-center text-xs text-orange-400 mt-3">
+              हर हर महादेव 🔱
+            </p>
           </div>
         )}
 
         {/* Bottom branding if not logged in */}
         {!user && (
           <div className="px-4 pb-6 pt-3">
-            <p className="text-center text-xs text-orange-400">हर हर महादेव 🔱</p>
+            <p className="text-center text-xs text-orange-400">
+              हर हर महादेव 🔱
+            </p>
           </div>
         )}
       </div>
 
       {/* ── Auth Modal ── */}
       {showAuthModal && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4"
-          style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(10px)" }}
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          style={{
+            background: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(10px)",
+          }}
         >
           <div
             className="w-full max-w-sm rounded-3xl overflow-hidden shadow-2xl"
-            style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(20px)", border: "1px solid rgba(234,88,12,0.2)" }}
+            style={{
+              background: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid rgba(234,88,12,0.2)",
+            }}
           >
             {/* Modal header */}
-            <div className="px-6 pt-6 pb-4 text-center border-b border-orange-100"
-              style={{ background: "linear-gradient(to bottom, #fff7ed, white)" }}
+            <div
+              className="px-6 pt-6 pb-4 text-center border-b border-orange-100"
+              style={{
+                background: "linear-gradient(to bottom, #fff7ed, white)",
+              }}
             >
               <div className="text-3xl mb-2">🕉️</div>
               <h2 className="text-xl font-bold text-gray-900">
-                {authStep === "email" ? "Welcome, Devotee" : "Verify Your Identity"}
+                {authStep === "email"
+                  ? "Welcome, Devotee"
+                  : "Verify Your Identity"}
               </h2>
               <p className="text-xs text-gray-500 mt-1">
-                {authStep === "email" ? "Sign in to Mahakal Bazaar" : `OTP sent to ${email}`}
+                {authStep === "email"
+                  ? "Sign in to Mahakal Bazaar"
+                  : `OTP sent to ${email}`}
               </p>
-              <button onClick={closeModal} className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-orange-100 text-gray-400 transition">
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-orange-100 text-gray-400 transition"
+              >
                 <X size={18} />
               </button>
             </div>
@@ -424,7 +554,10 @@ function Navbar() {
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={17} />
+                      <Mail
+                        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+                        size={17}
+                      />
                       <input
                         type="email"
                         value={email}
@@ -435,13 +568,24 @@ function Navbar() {
                       />
                     </div>
                   </div>
-                  {error && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
-                  {message && <p className="text-green-600 text-xs bg-green-50 px-3 py-2 rounded-lg">{message}</p>}
+                  {error && (
+                    <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">
+                      {error}
+                    </p>
+                  )}
+                  {message && (
+                    <p className="text-green-600 text-xs bg-green-50 px-3 py-2 rounded-lg">
+                      {message}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={loading}
                     className="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-60"
-                    style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", boxShadow: "0 4px 16px rgba(234,88,12,0.3)" }}
+                    style={{
+                      background: "linear-gradient(135deg,#ea580c,#dc2626)",
+                      boxShadow: "0 4px 16px rgba(234,88,12,0.3)",
+                    }}
                   >
                     {loading ? "Sending OTP..." : "🔱 Send OTP"}
                   </button>
@@ -456,14 +600,24 @@ function Navbar() {
                       type="text"
                       maxLength="6"
                       value={otp}
-                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                      onChange={(e) =>
+                        setOtp(e.target.value.replace(/\D/g, ""))
+                      }
                       className="w-full py-3 rounded-xl border border-orange-200 bg-white text-xl font-bold text-center tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-orange-300 transition"
                       placeholder="······"
                       required
                     />
                   </div>
-                  {error && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
-                  {message && <p className="text-green-600 text-xs bg-green-50 px-3 py-2 rounded-lg">{message}</p>}
+                  {error && (
+                    <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">
+                      {error}
+                    </p>
+                  )}
+                  {message && (
+                    <p className="text-green-600 text-xs bg-green-50 px-3 py-2 rounded-lg">
+                      {message}
+                    </p>
+                  )}
                   <div className="flex gap-3">
                     <button
                       type="button"
@@ -476,7 +630,10 @@ function Navbar() {
                       type="submit"
                       disabled={loading}
                       className="flex-2 px-6 py-3 rounded-xl text-white font-bold text-sm transition-all hover:scale-[1.02] disabled:opacity-60"
-                      style={{ background: "linear-gradient(135deg,#ea580c,#dc2626)", flex: 2 }}
+                      style={{
+                        background: "linear-gradient(135deg,#ea580c,#dc2626)",
+                        flex: 2,
+                      }}
                     >
                       {loading ? "Verifying..." : "🕉️ Verify OTP"}
                     </button>

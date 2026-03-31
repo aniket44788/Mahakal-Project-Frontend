@@ -28,6 +28,7 @@ import ContactUs from "./Components/Policy/ContactUs";
 import RouteLoaderHandler from "../utils/RouteLoaderHandler";
 import OrderSuccess from "../utils/OrderSuccess";
 import About from "./Components/Navbar/About";
+import Blog1 from "./Components/Navbar/Blogs/Blog1";
 // import PrivacyPolicy from './Components/Policy/PrivacyPolicy'
 
 function App() {
@@ -50,8 +51,7 @@ function App() {
           <Route path="/temples" element={<Temples />} />
           <Route path="/donation" element={<Donation />} />
           <Route path="/about" element={<About />} />
-
-
+          <Route path="/blogs" element={<Blog1 />} />
 
           <Route path="/single/:id" element={<ProductDetails />} />
           <Route path="/profile" element={<Profile />} />
