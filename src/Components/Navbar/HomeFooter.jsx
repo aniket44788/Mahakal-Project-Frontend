@@ -14,7 +14,7 @@ export default function HomeFooter() {
     e.preventDefault();
     setLoading(true);
     setResponseMsg("");
-    const token = localStorage.getItem("mahakalToken"); // Keep if same auth, else update
+    const token = localStorage.getItem("mahakalToken");
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/email`,
@@ -41,22 +41,26 @@ export default function HomeFooter() {
   ];
 
   const inputClass =
-    "w-full px-4 py-3 rounded-xl text-sm text-gray-800 placeholder-gray-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400";
+    "w-full px-4 py-3 rounded-xl text-sm text-gray-800 placeholder-gray-400 outline-none transition-all duration-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-400"
+  ;
 
   return (
     <footer
-      className="relative overflow-hidden"
+      className="relative overflow-hidden "
       style={{
         background: "linear-gradient(160deg,#fff7ed 0%,#ffffff 50%,#fff7ed 100%)",
-        borderTop: "1px solid rgba(249,115,22,0.15)",
+        borderTop: "1px solid rgba(234,88,12,0.12)",
       }}
     >
+      {/* Decorative top border */}
+     
+
       {/* Subtle pattern overlay */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.04]"
+        className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #f97316 1px, transparent 0)`,
-          backgroundSize: "30px 30px",
+          backgroundImage: `radial-gradient(circle at 1px 1px, #ea580c 1px, transparent 0)`,
+          backgroundSize: "28px 28px",
         }}
       />
 
@@ -64,7 +68,7 @@ export default function HomeFooter() {
       <div
         className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[200px] pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse, rgba(249,115,22,0.09) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(234,88,12,0.08) 0%, transparent 70%)",
         }}
       />
 
@@ -76,25 +80,23 @@ export default function HomeFooter() {
             {/* Logo */}
             <div className="flex items-center gap-3 mb-5">
               <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center text-3xl shadow-lg flex-shrink-0"
-                style={{ background: "linear-gradient(135deg,#f97316,#ea580c)" }}
+                className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-lg flex-shrink-0"
+                style={{ background: "linear-gradient(135deg,#fb923c,#ef4444)" }}
               >
-                🐘
+                🕉️
               </div>
               <div>
-                <p className="text-gray-900 font-black text-lg leading-tight">Khajrana Ganesh Mandir</p>
-                <p className="text-orange-600 text-xs font-semibold">Indore • Madhya Pradesh</p>
+                <p className="text-gray-900 font-black text-lg leading-tight">Mahakal Bazar</p>
+                <p className="text-orange-500 text-xs font-semibold">Divine Essentials</p>
               </div>
             </div>
 
             <p className="text-orange-700 text-sm leading-relaxed mb-4 italic font-semibold">
-              "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभः ।"
+              "आपकी श्रद्धा, हमारी जिम्मेदारी"
             </p>
 
-            <p className="text-gray-600 text-xs leading-relaxed mb-6">
-              The sacred Siddhivinayak temple built by Rani Ahilyabai Holkar. 
-              Home to the divine sindoor idol of Lord Ganesha, the remover of obstacles. 
-              Fulfill your wishes with devotion.
+            <p className="text-gray-500 text-xs leading-relaxed mb-6">
+              Delivering sacred puja items, rudraksha, and divine offerings straight to your doorstep with devotion.
             </p>
 
             {/* Social icons */}
@@ -122,7 +124,7 @@ export default function HomeFooter() {
           {/* ── Quick Links ── */}
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-orange-500 text-sm">🪔</span>
+              <span className="text-orange-400 text-sm">🔱</span>
               <h3 className="text-gray-900 font-bold text-sm uppercase tracking-widest">Quick Links</h3>
               <div className="flex-1 h-px bg-gradient-to-r from-orange-500/40 to-transparent ml-2" />
             </div>
@@ -134,7 +136,9 @@ export default function HomeFooter() {
                     href={link.href}
                     className="group flex items-center gap-2.5 text-gray-600 hover:text-orange-600 text-sm transition-all duration-200"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-orange-500/60 group-hover:bg-orange-500 transition-all group-hover:scale-125 flex-shrink-0" />
+                    <span
+                      className="w-1.5 h-1.5 rounded-full bg-orange-500/50 group-hover:bg-orange-400 transition-all group-hover:scale-125 flex-shrink-0"
+                    />
                     {link.label}
                   </a>
                 </li>
@@ -144,29 +148,23 @@ export default function HomeFooter() {
             {/* Contact info */}
             <div
               className="mt-8 rounded-2xl p-4"
-              style={{ background: "rgba(249,115,22,0.1)", border: "1px solid rgba(249,115,22,0.25)" }}
+              style={{ background: "rgba(234,88,12,0.1)", border: "1px solid rgba(234,88,12,0.2)" }}
             >
-              <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-3">📞 Temple Contact</p>
+              <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-3">📞 Contact</p>
               <a
-                href="tel:+919893699196"
+                href="tel:+918351927365"
                 className="text-gray-900 font-bold text-base hover:text-orange-600 transition block mb-1"
               >
-                +91 62305 08024 (Manager)
+                +91 83519 27365
               </a>
-              <a
-                href="tel:+919200484324"
-                className="text-gray-900 font-bold text-base hover:text-orange-600 transition block mb-1"
-              >
-                +91 62305 08024
-              </a>
-              <p className="text-gray-500 text-xs mt-2">Khajrana, Indore (M.P.) • 6 AM onwards</p>
+              <p className="text-gray-400 text-xs">Mon – Sat · 9 AM – 7 PM IST</p>
             </div>
           </div>
 
           {/* ── Contact Form ── */}
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-orange-500 text-sm">✉️</span>
+              <span className="text-orange-400 text-sm">✉️</span>
               <h3 className="text-gray-900 font-bold text-sm uppercase tracking-widest">Write to Us</h3>
               <div className="flex-1 h-px bg-gradient-to-r from-orange-500/40 to-transparent ml-2" />
             </div>
@@ -180,7 +178,7 @@ export default function HomeFooter() {
                 placeholder="Your Name"
                 required
                 className={inputClass}
-                style={{ background: "white", border: "1px solid rgba(249,115,22,0.2)", color: "#1f2937" }}
+                style={{ background: "white", border: "1px solid rgba(234,88,12,0.2)", color: "#1f2937" }}
               />
               <input
                 type="email"
@@ -190,29 +188,29 @@ export default function HomeFooter() {
                 placeholder="Your Email"
                 required
                 className={inputClass}
-                style={{ background: "white", border: "1px solid rgba(249,115,22,0.2)", color: "#1f2937" }}
+                style={{ background: "white", border: "1px solid rgba(234,88,12,0.2)", color: "#1f2937" }}
               />
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Your Message / Seva Inquiry / Darshan Query"
+                placeholder="Your Message"
                 rows={3}
                 required
                 className={inputClass}
-                style={{ background: "white", border: "1px solid rgba(249,115,22,0.2)", color: "#1f2937", resize: "none" }}
+                style={{ background: "white", border: "1px solid rgba(234,88,12,0.2)", color: "#1f2937", resize: "none" }}
               />
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 rounded-xl text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 style={{
-                  background: loading ? "rgba(249,115,22,0.4)" : "linear-gradient(135deg,#f97316,#ea580c)",
-                  boxShadow: loading ? "none" : "0 4px 16px rgba(249,115,22,0.35)",
+                  background: loading ? "rgba(234,88,12,0.4)" : "linear-gradient(135deg,#ea580c,#dc2626)",
+                  boxShadow: loading ? "none" : "0 4px 16px rgba(234,88,12,0.35)",
                 }}
               >
-                {loading ? "🪔 Sending..." : "🙏 Send Message"}
+                {loading ? "🕉️ Sending..." : "🔱 Send Message"}
               </button>
 
               {responseMsg && (
@@ -231,16 +229,16 @@ export default function HomeFooter() {
         {/* ── Divider ── */}
         <div
           className="my-10 h-px"
-          style={{ background: "linear-gradient(to right, transparent, rgba(249,115,22,0.45), transparent)" }}
+          style={{ background: "linear-gradient(to right, transparent, rgba(234,88,12,0.4), transparent)" }}
         />
 
         {/* ── Bottom bar ── */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center">
           <p className="text-gray-400 text-xs">
-            © 2025 Khajrana Ganesh Mandir — All Rights Reserved.
+            © 2025 Mahakal Bazar — All Rights Reserved.
           </p>
-          <p className="text-orange-600 text-xs font-bold tracking-widest">
-            🪔 जय गणेश जय गणेश जय गणेश देवा 🔱
+          <p className="text-orange-500 text-xs font-bold tracking-widest">
+            🕉️ हर हर महादेव 🔱
           </p>
           <p className="text-gray-300 text-xs">
             Made with 🙏 in India
@@ -248,16 +246,16 @@ export default function HomeFooter() {
         </div>
       </div>
 
-      {/* Placeholder styles */}
+      {/* Placeholder styles for dark input text placeholders */}
       <style>{`
-        input::placeholder,
+        footer input::placeholder,
         footer textarea::placeholder {
           color: rgba(156,163,175,0.7);
         }
         footer input:focus,
         footer textarea:focus {
-          border-color: rgba(249,115,22,0.5) !important;
-          box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+          border-color: rgba(234,88,12,0.45) !important;
+          box-shadow: 0 0 0 3px rgba(234,88,12,0.08);
         }
       `}</style>
     </footer>

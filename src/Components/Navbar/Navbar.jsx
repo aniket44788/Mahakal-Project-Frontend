@@ -48,14 +48,14 @@ function Navbar() {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem("khajranaUser");
-    const savedToken = localStorage.getItem("khajranaToken");
+    const savedUser = localStorage.getItem("mahakalUser");
+    const savedToken = localStorage.getItem("mahakalToken");
     if (savedUser && savedToken) setUser(JSON.parse(savedUser));
   }, []);
 
   useEffect(() => {
     const fetchCartCount = async () => {
-      const token = localStorage.getItem("khajranaToken");
+      const token = localStorage.getItem("mahakalToken");
       if (!token || !user) return;
       try {
         const res = await fetch(`${API_URL}/cart/get`, {
@@ -83,6 +83,7 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile drawer is open
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -135,8 +136,8 @@ function Navbar() {
       const data = await res.json();
       if (data.success) {
         setUser(data.user);
-        localStorage.setItem("khajranaUser", JSON.stringify(data.user));
-        localStorage.setItem("khajranaToken", data.token);
+        localStorage.setItem("mahakalUser", JSON.stringify(data.user));
+        localStorage.setItem("mahakalToken", data.token);
         setShowAuthModal(false);
         setAuthStep("email");
         setEmail("");
@@ -153,8 +154,8 @@ function Navbar() {
   const handleLogout = () => {
     setUser(null);
     setCartCount(0);
-    localStorage.removeItem("khajranaUser");
-    localStorage.removeItem("khajranaToken");
+    localStorage.removeItem("mahakalUser");
+    localStorage.removeItem("mahakalToken");
     setShowProfile(false);
     setShowAuthModal(false);
     setIsOpen(false);
@@ -172,10 +173,10 @@ function Navbar() {
   const navLinks = [
     { to: "/", icon: <Home size={20} />, label: "Home" },
     { to: "/products", icon: <Gift size={20} />, label: "Products" },
-    // { to: "/temples", icon: <Landmark size={20} />, label: "Temples" },
+    { to: "/temples", icon: <Landmark size={20} />, label: "Temples" },
     { to: "/donation", icon: <Library size={20} />, label: "Donation" },
     { to: "/about", icon: <ExternalLink size={20} />, label: "About" },
-    // { to: "/blogs", icon: <FaBlog size={20} />, label: "Blogs" },
+    { to: "/blogs", icon: <FaBlog size={20} />, label: "Blogs" },
   ];
 
   return (
@@ -186,12 +187,12 @@ function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
             <img
-              src="/ganesh.jpeg"
-              alt="Khajrana Ganesh Logo"
+              src="/shivmahakal.png"
+              alt="Logo"
               className="w-9 h-9 rounded-full object-cover ring-2 ring-orange-200"
             />
             <span className="text-lg font-bold text-orange-600 tracking-tight">
-              Khajrana Prasad
+              Mahakal Bazaar
             </span>
           </Link>
 
@@ -214,7 +215,7 @@ function Navbar() {
             ref={profileRef}
           >
             {/* Cart */}
-            {/* <button
+            <button
               onClick={goToCart}
               className="relative p-2 hover:bg-orange-50 rounded-xl transition"
             >
@@ -224,8 +225,8 @@ function Navbar() {
                   {cartCount}
                 </span>
               )}
-            </button> */}
-{/* 
+            </button>
+
             {!user ? (
               <button
                 onClick={() => setShowAuthModal(true)}
@@ -245,7 +246,7 @@ function Navbar() {
                   {user.name?.split(" ")[0]}
                 </span>
               </button>
-            )} */}
+            )}
 
             {/* Desktop Profile Dropdown */}
             {showProfile && user && (
@@ -264,7 +265,7 @@ function Navbar() {
                         {user.email}
                       </p>
                       <span className="inline-block mt-1 text-[10px] font-semibold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
-                        🙏 Devotee
+                        🔱 Devotee
                       </span>
                     </div>
                   </div>
@@ -284,7 +285,7 @@ function Navbar() {
                       className="text-gray-400 group-hover:text-orange-400 transition"
                     />
                   </button>
-                  {/* <button
+                  <button
                     onClick={goToCart}
                     className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-orange-50 transition group"
                   >
@@ -301,7 +302,7 @@ function Navbar() {
                       size={14}
                       className="text-gray-400 group-hover:text-orange-400 transition"
                     />
-                  </button> */}
+                  </button>
                 </div>
 
                 <div className="border-t border-orange-100 p-3">
@@ -317,7 +318,7 @@ function Navbar() {
           </div>
 
           {/* Mobile right side */}
-          {/* <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-2">
             <button
               onClick={goToCart}
               className="relative p-2 hover:bg-orange-50 rounded-xl transition"
@@ -335,7 +336,7 @@ function Navbar() {
             >
               {isOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
-          </div> */}
+          </div>
         </div>
       </nav>
 
@@ -365,11 +366,11 @@ function Navbar() {
         <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-orange-100">
           <div className="flex items-center gap-2">
             <img
-              src="/ganesh.jpeg"
-              alt="Khajrana Ganesh Logo"
+              src="/shivmahakal.png"
+              alt="Logo"
               className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-200"
             />
-            <span className="font-bold text-orange-600">Khajrana Prasad</span>
+            <span className="font-bold text-orange-600">Mahakal Bazaar</span>
           </div>
           <button
             onClick={() => setIsOpen(false)}
@@ -382,7 +383,7 @@ function Navbar() {
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
           {/* User card (if logged in) */}
-          {/* {user ? (
+          {user ? (
             <div
               className="rounded-2xl p-4 mb-2"
               style={{
@@ -401,7 +402,7 @@ function Navbar() {
                   </p>
                   <p className="text-xs text-gray-500 truncate">{user.email}</p>
                   <span className="inline-block mt-1 text-[10px] font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
-                    🙏 Devotee
+                    🔱 Devotee
                   </span>
                 </div>
               </div>
@@ -425,7 +426,7 @@ function Navbar() {
             >
               <Mail size={16} /> Sign In to your account
             </button>
-          )} */}
+          )}
 
           {/* Nav links */}
           <div
@@ -454,7 +455,7 @@ function Navbar() {
           </div>
 
           {/* Cart row */}
-          {/* <button
+          <button
             onClick={goToCart}
             className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl transition hover:bg-orange-100"
             style={{
@@ -474,7 +475,7 @@ function Navbar() {
               )}
               <ChevronRight size={16} className="text-gray-300" />
             </div>
-          </button> */}
+          </button>
         </div>
 
         {/* ── Bottom: Logout pinned ── */}
@@ -487,7 +488,7 @@ function Navbar() {
               <LogOut size={17} /> Sign Out
             </button>
             <p className="text-center text-xs text-orange-400 mt-3">
-              गणपति बाप्पा मोरया 🙏
+              हर हर महादेव 🔱
             </p>
           </div>
         )}
@@ -496,7 +497,7 @@ function Navbar() {
         {!user && (
           <div className="px-4 pb-6 pt-3">
             <p className="text-center text-xs text-orange-400">
-              गणपति बाप्पा मोरया 🙏
+              हर हर महादेव 🔱
             </p>
           </div>
         )}
@@ -534,7 +535,7 @@ function Navbar() {
               </h2>
               <p className="text-xs text-gray-500 mt-1">
                 {authStep === "email"
-                  ? "Sign in to Khajrana Prasad"
+                  ? "Sign in to Mahakal Bazaar"
                   : `OTP sent to ${email}`}
               </p>
               <button
@@ -586,7 +587,7 @@ function Navbar() {
                       boxShadow: "0 4px 16px rgba(234,88,12,0.3)",
                     }}
                   >
-                    {loading ? "Sending OTP..." : "🙏 Send OTP"}
+                    {loading ? "Sending OTP..." : "🔱 Send OTP"}
                   </button>
                 </form>
               ) : (
