@@ -4,19 +4,19 @@ import { Helmet } from "react-helmet";
 const faqs = [
   {
     icon: "🛒",
-    question: "महाकाल प्रसाद ऑनलाइन कैसे बुक करें?",
+    question: "खजराना गणेश प्रसाद ऑनलाइन कैसे बुक करें?",
     answer:
-      "हमारी वेबसाइट पर आकर प्रसाद चुनें, मात्रा (quantity) सिलेक्ट करें, अपना पता भरें और भुगतान पूरा करें। अब आप घर बैठे सीधे महाकाल का आशीर्वाद प्राप्त कर सकते हैं। UPI, कार्ड और नेट बैंकिंग सभी विकल्प उपलब्ध हैं।",
+      "हमारी वेबसाइट पर आकर प्रसाद चुनें, मात्रा (quantity) सिलेक्ट करें, अपना पता भरें और भुगतान पूरा करें। अब आप घर बैठे सीधे खजराना गणेश का आशीर्वाद प्राप्त कर सकते हैं। UPI, कार्ड और नेट बैंकिंग सभी विकल्प उपलब्ध हैं।",
     tag: "ऑनलाइन बुकिंग",
-    keywords: "महाकाल प्रसाद ऑनलाइन कैसे बुक करें, ऑनलाइन ऑर्डर",
+    keywords: "खजराना गणेश प्रसाद ऑनलाइन कैसे बुक करें, ऑनलाइन ऑर्डर",
   },
   {
     icon: "🛕",
     question: "क्या प्रसाद सीधे मंदिर से आता है?",
     answer:
-      "हाँ, हमारा प्रसाद सीधे उज्जैन महाकालेश्वर मंदिर से लिया जाता है। मंदिर के पुजारी विशेष पूजा विधि से इसे तैयार करते हैं। इसकी शुद्धता और पवित्रता का पूरा ध्यान रखा जाता है और इसे विशेष पैकेजिंग में भेजा जाता है।",
+      "हाँ, हमारा प्रसाद सीधे इंदौर के श्री खजराना गणेश मंदिर से लिया जाता है। मंदिर के पुजारी विशेष पूजा विधि से इसे तैयार करते हैं। इसकी शुद्धता और पवित्रता का पूरा ध्यान रखा जाता है और इसे विशेष पैकेजिंग में भेजा जाता है।",
     tag: "असली मंदिर प्रसाद",
-    keywords: "ऑथेंटिक प्रसाद, मंदिर का प्रसाद, महाकालेश्वर प्रसाद उज्जैन",
+    keywords: "ऑथेंटिक प्रसाद, मंदिर का प्रसाद, खजराना गणेश प्रसाद इंदौर",
   },
   {
     icon: "🚚",
@@ -53,7 +53,6 @@ const faqs = [
   },
 ];
 
-// ✅ FAQ Schema for Google Rich Results — this is correct structured data
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -74,22 +73,21 @@ const FAQ = () => {
 
   return (
     <div className="bg-orange-50 min-h-screen font-sans">
-      {/* ✅ SEO: Title, description, canonical, OG, Twitter, JSON-LD */}
       <Helmet>
         <title>
-          Mahakal Prasad FAQ | Online Booking, Delivery & Poori Jankari 2024
+          Khajrana Ganesh Prasad FAQ | Online Booking, Delivery & Poori Jankari 2024
         </title>
         <meta
           name="description"
-          content="Mahakal Prasad online kaise book karein, delivery kitne din mein hoti hai, kya prasad seedha mandir se aata hai — sabhi sawaalon ke jawab. Ujjain Mahakaleshwar Mandir se asli prasad."
+          content="Khajrana Ganesh Prasad online kaise book karein, delivery kitne din mein hoti hai, kya prasad seedha mandir se aata hai — sabhi sawaalon ke jawab. Indore Khajrana Ganesh Mandir se asli prasad."
         />
         <meta
           name="keywords"
-          content="mahakal prasad, mahakal prasad online book kaise karein, ujjain prasad delivery, mahakaleshwar prasad, prasad ghar pe mangwao, mahakal prasad price"
+          content="khajrana ganesh prasad, khajrana prasad online book kaise karein, indore prasad delivery, khajrana ganesh mandir prasad, prasad ghar pe mangwao, ganesh prasad price indore"
         />
         <meta name="robots" content="index, follow" />
         <meta name="language" content="Hindi" />
-        <meta name="author" content="Mahakal Prasad" />
+        <meta name="author" content="Khajrana Ganesh Prasad" />
         <link rel="canonical" href="https://yourwebsite.com/faq" />
 
         {/* Open Graph */}
@@ -97,11 +95,11 @@ const FAQ = () => {
         <meta property="og:locale" content="hi_IN" />
         <meta
           property="og:title"
-          content="Mahakal Prasad FAQ — Online Booking aur Delivery Guide"
+          content="Khajrana Ganesh Prasad FAQ — Online Booking aur Delivery Guide"
         />
         <meta
           property="og:description"
-          content="Ujjain Mahakaleshwar Mandir se seedha prasad. Online booking, delivery, freshness — sabhi sawaalon ke jawab."
+          content="Indore Khajrana Ganesh Mandir se seedha prasad. Online booking, delivery, freshness — sabhi sawaalon ke jawab."
         />
         <meta property="og:url" content="https://yourwebsite.com/faq" />
 
@@ -109,14 +107,13 @@ const FAQ = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Mahakal Prasad FAQ — Poori Jankari"
+          content="Khajrana Ganesh Prasad FAQ — Poori Jankari"
         />
         <meta
           name="twitter:description"
-          content="Mahakal Prasad online booking aur delivery ke baare mein sabhi sawaalon ke jawab."
+          content="Khajrana Ganesh Prasad online booking aur delivery ke baare mein sabhi sawaalon ke jawab."
         />
 
-        {/* ✅ FAQ JSON-LD — Google Rich Results ke liye zaroori */}
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
@@ -124,16 +121,16 @@ const FAQ = () => {
       <div className="bg-gradient-to-br from-orange-100 via-orange-500 to-red-400 text-white text-center py-10 px-4 relative overflow-hidden">
         <span className="text-5xl block mb-2">🕉️</span>
         <span className="inline-block bg-white/20 border border-white/30 text-white text-xs font-semibold tracking-wide px-4 py-1 rounded-full mb-3">
-          🙏 Jai Mahakal
+          🙏 Jai Ganesh
         </span>
         <h1
           className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2"
           style={{ fontFamily: "'Tiro Devanagari Hindi', serif" }}
         >
-          Mahakal Prasad — Aksar Pooche Gaye Sawaal
+          Khajrana Ganesh Prasad — Aksar Pooche Gaye Sawaal
         </h1>
         <p className="text-sm sm:text-base text-orange-100 max-w-xl mx-auto leading-relaxed">
-          Ujjain Mahakaleshwar Mandir se seedha prasad — booking se lekar
+          Indore Khajrana Ganesh Mandir se seedha prasad — booking se lekar
           delivery tak, har sawaal ka jawab yahan hai.
         </p>
       </div>
@@ -166,7 +163,6 @@ const FAQ = () => {
           ✦ Sawaal aur Jawab ✦
         </p>
 
-        {/* itemScope on the wrapper for FAQPage schema */}
         <div
           itemScope
           itemType="https://schema.org/FAQPage"
@@ -236,7 +232,6 @@ const FAQ = () => {
                   <span className="inline-block mt-2 bg-orange-50 text-orange-700 text-xs font-semibold px-3 py-1 rounded-full">
                     ✦ {faq.tag}
                   </span>
-                  {/* Hidden keywords — screen readers skip, crawlers index */}
                   <span className="sr-only">{faq.keywords}</span>
                 </div>
               )}

@@ -65,13 +65,13 @@ function Donation() {
             UPI / Wallet / Bank Apps से support करें
           </p>
 
-          <div className="p-3 bg-white rounded-2xl shadow-lg">
+          {/* <div className="p-3 bg-white rounded-2xl shadow-lg">
             <img
               src="/qr.png"
               alt="Donation QR Code"
               className="w-44 h-44 sm:w-60 sm:h-60 object-contain rounded-xl hover:scale-105 transition-transform duration-300"
             />
-          </div>
+          </div> */}
 
           <p className="mt-4 text-xs sm:text-sm text-gray-500">
             100% secure payment 🔒

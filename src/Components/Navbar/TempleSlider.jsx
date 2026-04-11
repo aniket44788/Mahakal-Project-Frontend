@@ -1,4 +1,4 @@
-import mahakal1 from "../../assets/mahakal.jpeg";
+import mahakal1 from "../../assets/ganesh.jpeg";
 
 const TempleHero = () => {
   return (
@@ -74,13 +74,13 @@ const TempleHero = () => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                महाकालेश्वर का प्रसाद
+                खजराना गणेश का प्रसाद
               </h1>
             </div>
 
             {/* Description */}
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl mx-auto lg:mx-0">
-              अब उज्जैन के पवित्र श्री महाकालेश्वर मंदिर से{" "}
+              अब इंदौर के पवित्र श्री खजराना गणेश मंदिर से{" "}
               <span className="font-bold text-gray-800">
                 शुद्ध, ताज़ा और आशीर्वाद से भरपूर प्रसाद
               </span>{" "}
@@ -103,7 +103,7 @@ const TempleHero = () => {
               </a>
 
               <a
-                href="https://wa.me/918351927365?text=नमस्ते,%20मुझे%20महाकाल%20बाजार%20से%20प्रसाद%20ऑर्डर%20करना%20है।%20कृपया%20मुझे%20डिटेल्स%20बताएं।"
+                href="https://wa.me/918351927365?text=नमस्ते,%20मुझे%20खजराना%20गणेश%20मंदिर%20से%20प्रसाद%20ऑर्डर%20करना%20है।%20कृपया%20मुझे%20डिटेल्स%20बताएं।"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl text-white font-black text-base transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] active:scale-95"
@@ -140,7 +140,7 @@ const TempleHero = () => {
             {/* Stats row */}
             <div className="flex justify-center lg:justify-start gap-6 pt-3">
               {[
-                { value: "10K+", label: "Happy Devotees" },
+                { value: "50K+", label: "Daily Devotees" },
                 { value: "100%", label: "Authentic" },
                 { value: "4.9★", label: "Rating" },
               ].map((stat) => (
@@ -180,7 +180,7 @@ const TempleHero = () => {
               >
                 <img
                   src={mahakal1}
-                  alt="श्री महाकालेश्वर मंदिर - उज्जैन"
+                  alt="श्री खजराना गणेश मंदिर - इंदौर"
                   className="w-full max-w-sm sm:max-w-md lg:max-w-lg object-cover transition-transform duration-700 hover:scale-105"
                   style={{ display: "block" }}
                 />
@@ -231,8 +231,8 @@ const TempleHero = () => {
                 }}
               >
                 <p className="text-xl font-black text-orange-600">🕉️</p>
-                <p className="text-xs font-bold text-gray-800">जय महाकाल</p>
-                <p className="text-[10px] text-gray-400">हर हर महादेव</p>
+                <p className="text-xs font-bold text-gray-800">जय गणेश</p>
+                <p className="text-[10px] text-gray-400">गणपति बाप्पा मोरया</p>
               </div>
 
               {/* Floating card — bottom right */}
@@ -247,7 +247,7 @@ const TempleHero = () => {
                 }}
               >
                 <p className="text-xs font-bold text-gray-800">⭐ 4.9 Rating</p>
-                <p className="text-[10px] text-gray-400">10,000+ Devotees</p>
+                <p className="text-[10px] text-gray-400">50,000+ Devotees</p>
               </div>
             </div>
           </div>
