@@ -174,7 +174,7 @@ function Navbar() {
     { to: "/", icon: <Home size={20} />, label: "Home" },
     { to: "/products", icon: <Gift size={20} />, label: "Products" },
     { to: "/temples", icon: <Landmark size={20} />, label: "Temples" },
-    { to: "/donation", icon: <Library size={20} />, label: "Donation" },
+    // { to: "/donation", icon: <Library size={20} />, label: "Donation" },
     { to: "/about", icon: <ExternalLink size={20} />, label: "About" },
     { to: "/blogs", icon: <FaBlog size={20} />, label: "Blogs" },
   ];
